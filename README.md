@@ -74,12 +74,11 @@ import torch
 
 # Load the model (replace with your actual path)
 model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name = "qwen_cp_lora_model",  # or your fine-tuned checkpoint
+    model_name = "qwen_cp_lora_model",
     load_in_4bit = True,
     device_map = "auto"
 )
 
-# Inference must use use_cache=False for Qwen-2.5 stability
 prompt = "Solve: Given an array of integers, find the maximum subarray sum."
 inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
 outputs = model.generate(
