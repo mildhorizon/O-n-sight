@@ -1,45 +1,91 @@
-## What is O(n)sight?
+# CP-Tutor: A Logic-First LLM for Competitive Programming
 
-Most AI educational tools are just thin wrappers around a chat API. **O(n)sight** is a fully integrated, full-stack educational platform designed specifically for mastering Data Structures and Algorithms. It treats the AI, the backend architecture, and the frontend user experience as equal pillars.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Unsloth](https://img.shields.io/badge/Unsloth-2.4x%20faster-orange)](https://github.com/unslothai/unsloth)
 
-### The AI Engine
-At its core runs a highly optimized, fine-tuned Small Language Model (SLM). Instead of outputting generic conversational text, the model is strictly constrained via QLoRA to output distinct structural formats: 
-* **Concept Breakdowns:** Clean, readable Markdown.
-* **Visualizations:** Mermaid.js syntax for rendering trees, graphs, and logic flows.
-* **Interactive Testing:** Strict JSON objects for multiple-choice quizzes.
-
-The model is hardware-agnostic, designed to run efficiently on local consumer hardware (requiring as little as 4GB of VRAM) via GGUF quantization, or hosted remotely via a cloud notebook API tunnel (e.g., Google Colab T4 instances).
-
-### The Web Architecture & Dynamic UI
-The true power of O(n)sight lies in the web pipeline that parses the model's output in real-time and manages the user's learning state.
-
-**1. Backend Context Injection (The Loop)**
-When a user asks a question, the backend intercepts the request and retrieves data from two sources:
-* **Vector Database:** Retrieves semantic embeddings of past conversations to maintain chat history.
-* **Standard Database:** Retrieves numerical performance metrics on specific DSA topics.
-
-The backend compiles this data into a hidden system prompt. The model processes the prompt and factors the user's specific weaknesses into its output calculation.
-
-**2. Frontend Rendering & State Management**
-The frontend receives the AI's response and dynamically renders the UI based on the syntax. It intercepts ` ```mermaid ` blocks to draw interactive SVG flowcharts on the fly, and it parses ` ```json ` blocks to construct state-managed quiz components.
+**CP-Tutor** is a specialized Large Language Model (LLM) engineered to act as a high-level mentor for Competitive Programming. Unlike standard coding assistants that prioritize "code-completion," CP-Tutor is fine-tuned to prioritize **algorithmic reasoning, memory safety, and time-complexity optimization**.
 
 ---
 
-### Data Contracts & System Schemas
+## 🚀 The Core Philosophy: "Logic Before Syntax"
 
-To maintain strict communication between the AI, the frontend, and the database, O(n)sight relies on rigid data schemas. 
+Generic LLMs often provide "correct-looking" code that fails under strict execution limits (TLE/MLE). CP-Tutor solves this by enforcing a **Logic-First Schema**. The model is trained to output its response in a specific sequence:
 
-#### 1. Analytics Schema (Backend Database)
-When a user completes a quiz on the frontend, the result is sent to the backend and stored to track weaknesses. 
-```json
-{
-  "user_id": "usr_98765",
-  "topic_id": "graphs_dijkstra",
-  "topic_name": "Dijkstra's Algorithm",
-  "performance_metrics": {
-    "total_attempts": 4,
-    "average_score": 65.0,
-    "last_score": 80.0
-  },
-  "status": "needs_review"
-}
+1.  **Core Idea:** High-level algorithmic approach (e.g., Two Pointers, Segment Tree).
+2.  **Steps:** A step-by-step breakdown of the implementation.
+3.  **Data Structures:** Justification for chosen containers.
+4.  **Complexity:** Rigorous $O(f(N))$ time and space analysis.
+5.  **Final Code:** Clean, optimized C++17 implementation.
+
+---
+
+## 🧪 Experimental Methodology & Grid Search
+
+The final model configuration was determined through an exhaustive **Ablation Study and Grid Search** on a Tesla T4 GPU. We treated fine-tuning as a scientific experiment, testing the following variables to find the "Global Minimum" for training loss.
+
+### 1. The Base Model Tournament
+
+We benchmarked two heavyweights in the 7B class:
+
+* **Llama-3-8B-Instruct:** Exceptional general reasoning but lacked the deep, multilingual BPE vocabulary needed for dense C++ boilerplate.
+* **Qwen-2.5-Coder-7B-Instruct:** **(Winner)** Chosen for its specialized 5.5T token pre-training on code and its 128K context window. It outperformed Llama-3 in zero-shot "Repair" tasks by ≈15%.
+
+### 2. LoRA Hyperparameter Optimization
+
+We utilized **LoRA (Low-Rank Adaptation)** to fine-tune only 0.53% of the model’s parameters, saving massive VRAM while maintaining accuracy.
+
+| Hyperparameter | Values Tested | Final Selection | Justification |
+| :--- | :--- | :--- | :--- |
+| **Rank ($r$)** | 8, 16, 32 | **16** | Rank 8 underfitted CP syntax; Rank 32 began to overfit specific training problems. |
+| **Alpha ($\alpha$)** | 16, 32 | **32** | Maintained the $2 \times r$ ratio for optimal weight scaling. |
+| **Learning Rate** | 2e-4, 5e-5 | **2e-4** | Faster convergence on our curated 50-problem high-quality set. |
+| **Epochs** | 3, 5, 9 | **9** | **9 Epochs** achieved the lowest loss (0.19) without compromising generalization. |
+
+---
+
+## 📊 Multi-Task Training Schema
+
+The dataset was categorized into four mission-critical CP tasks:
+
+* **`SFT_SOLVE`**: From problem statement to optimized solution. Teaches the model to handle $10^9$ constraints using `long long`.
+* **`REPAIR`**: Given a buggy snippet, the model must find the "Correctness Invariant" and fix the logical flaw (e.g., off-by-one errors).
+* **`OPTIMIZE`**: Teaches the model to identify $O(N^2)$ bottlenecks and refactor them into $O(N \log N)$ using Maps or Sorting.
+* **`PLAN_ONLY`**: Strategic brainstorming. Focuses on edge cases ($N=1$, maximum constraints) without writing a single line of code.
+
+---
+
+## 🛠️ Technical Implementation
+
+* **Framework:** [Unsloth](https://github.com/unslothai/unsloth) (Implemented fused kernels for 2.4x speedup over standard HF).
+* **Quantization:** 4-bit NormalFloat (NF4) for 4.8GB VRAM footprint.
+* **Inference Patch:** Resolved Qwen-specific "Shape Mismatch" errors by disabling KV-cache during inference (`use_cache=False`) to ensure stable RoPE (Rotary Embedding) scaling.
+
+---
+
+## 📥 Getting Started
+
+### Local Deployment
+
+To run CP-Tutor on your personal GPU, use the following Python snippet:
+
+```python
+from unsloth import FastLanguageModel
+import torch
+
+# Load the model (replace with your actual path)
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name = "qwen_cp_lora_model",  # or your fine-tuned checkpoint
+    load_in_4bit = True,
+    device_map = "auto"
+)
+
+# Inference must use use_cache=False for Qwen-2.5 stability
+prompt = "Solve: Given an array of integers, find the maximum subarray sum."
+inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=1024,
+    use_cache=False  # critical for Qwen-2.5
+)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
