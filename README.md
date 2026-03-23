@@ -1,6 +1,5 @@
 # CP-Tutor: A Logic-First LLM for Competitive Programming
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Unsloth](https://img.shields.io/badge/Unsloth-2.4x%20faster-orange)](https://github.com/unslothai/unsloth)
 
