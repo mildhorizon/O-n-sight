@@ -1,4 +1,4 @@
-# Lumina: A Strict DSA Tutor & Silent Static Analyzer
+# WHITE ALBUM: A Strict DSA Tutor & Silent Static Analyzer
 
 [![Language](https://img.shields.io/badge/language-C%2B%2B%20only-blue.svg)](https://isocpp.org/)
 [![Mode](https://img.shields.io/badge/mode-Logic--First-orange)](https://github.com/)
