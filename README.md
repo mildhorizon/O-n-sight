@@ -4,7 +4,50 @@
 [![Mode](https://img.shields.io/badge/mode-Logic--First-orange)](https://github.com/)
 [![Topic](https://img.shields.io/badge/topic-General%20DSA-green)](https://github.com/)
 
-**Lumina** is a specialized LLM system prompt persona engineered to act as a **strict, no-nonsense DSA tutor and silent static analyzer**. It operates exclusively in **C++** and enforces a structured, schema-driven response methodology — ensuring every output is pedagogically rigorous, logically sound, and immediately runnable.
+**WHITE ALBUM** is a FINETUNED LLM system prompt persona engineered to act as a **strict, no-nonsense DSA tutor and silent static analyzer**. It operates exclusively in **C++** and enforces a structured, schema-driven response methodology — ensuring every output is pedagogically rigorous, logically sound, and immediately runnable.
+
+---
+
+## 🧪 Experimental Methodology & Grid Search
+
+The final model configuration was determined through an exhaustive **Ablation Study and Grid Search** on a Tesla T4 GPU. We treated fine-tuning as a scientific experiment, testing the following variables to find the "Global Minimum" for training loss.
+
+### 1. The Base Model Tournament
+
+We benchmarked two heavyweights in the 7B class:
+
+* **Llama-3-8B-Instruct:** Exceptional general reasoning but lacked the deep, multilingual BPE vocabulary needed for dense C++ boilerplate.
+* **Qwen-2.5-Coder-7B-Instruct:** **(Winner)** Chosen for its specialized 5.5T token pre-training on code and its 128K context window. It outperformed Llama-3 in zero-shot "Repair" tasks by ≈15%.
+
+### 2. LoRA Hyperparameter Optimization
+
+We utilized **LoRA (Low-Rank Adaptation)** to fine-tune only 0.53% of the model’s parameters, saving massive VRAM while maintaining accuracy.
+
+| Hyperparameter | Values Tested | Final Selection | Justification |
+| :--- | :--- | :--- | :--- |
+| **Rank ($r$)** | 8, 16, 32 | **16** | Rank 8 underfitted CP syntax; Rank 32 began to overfit specific training problems. |
+| **Alpha ($\alpha$)** | 16, 32 | **32** | Maintained the $2 \times r$ ratio for optimal weight scaling. |
+| **Learning Rate** | 2e-4, 5e-5 | **2e-4** | Faster convergence on our curated 50-problem high-quality set. |
+| **Epochs** | 3, 5, 9 | **9** | **9 Epochs** achieved the lowest loss (0.19) without compromising generalization. |
+
+---
+
+## 📊 Multi-Task Training Schema
+
+The dataset was categorized into four mission-critical CP tasks:
+
+* **`SFT_SOLVE`**: From problem statement to optimized solution. Teaches the model to handle $10^9$ constraints using `long long`.
+* **`REPAIR`**: Given a buggy snippet, the model must find the "Correctness Invariant" and fix the logical flaw (e.g., off-by-one errors).
+* **`OPTIMIZE`**: Teaches the model to identify $O(N^2)$ bottlenecks and refactor them into $O(N \log N)$ using Maps or Sorting.
+* **`PLAN_ONLY`**: Strategic brainstorming. Focuses on edge cases ($N=1$, maximum constraints) without writing a single line of code.
+
+---
+
+## 🛠️ Technical Implementation
+
+* **Framework:** [Unsloth](https://github.com/unslothai/unsloth) (Implemented fused kernels for 2.4x speedup over standard HF).
+* **Quantization:** 4-bit NormalFloat (NF4) for 4.8GB VRAM footprint.
+* **Inference Patch:** Resolved Qwen-specific "Shape Mismatch" errors by disabling KV-cache during inference (`use_cache=False`) to ensure stable RoPE (Rotary Embedding) scaling.
 
 ---
 
