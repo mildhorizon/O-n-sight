@@ -30,19 +30,6 @@ We utilized **LoRA (Low-Rank Adaptation)** to fine-tune only 0.53% of the model�
 | **Learning Rate** | 2e-4, 5e-5 | **2e-4** | Faster convergence on our curated 50-problem high-quality set. |
 | **Epochs** | 3, 5, 9 | **9** | **9 Epochs** achieved the lowest loss (0.19) without compromising generalization. |
 
----
-
-## 📊 Multi-Task Training Schema
-
-The dataset was categorized into four mission-critical CP tasks:
-
-* **`SFT_SOLVE`**: From problem statement to optimized solution. Teaches the model to handle $10^9$ constraints using `long long`.
-* **`REPAIR`**: Given a buggy snippet, the model must find the "Correctness Invariant" and fix the logical flaw (e.g., off-by-one errors).
-* **`OPTIMIZE`**: Teaches the model to identify $O(N^2)$ bottlenecks and refactor them into $O(N \log N)$ using Maps or Sorting.
-* **`PLAN_ONLY`**: Strategic brainstorming. Focuses on edge cases ($N=1$, maximum constraints) without writing a single line of code.
-
----
-
 ## 🛠️ Technical Implementation
 
 * **Framework:** [Unsloth](https://github.com/unslothai/unsloth) (Implemented fused kernels for 2.4x speedup over standard HF).
