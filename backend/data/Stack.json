@@ -1,0 +1,37 @@
+{
+  "topic": "Stack Basics",
+  "description": "Complete deep dive into stacks including implementations and conversions.",
+  "sections": [
+    {
+      "title": "What is a Stack?",
+      "definition": "A stack follows LIFO.",
+      "analogy": "Stack of plates.",
+      "code": "#include <stack>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    stack<int> s;\n    s.push(10);\n    s.push(20);\n    cout << s.top(); // 20\n}"
+    },
+    {
+      "title": "Stack using Array",
+      "definition": "Implemented using array and top pointer.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Stack {\n    int arr[100];\n    int top;\npublic:\n    Stack() { top = -1; }\n    void push(int x) { arr[++top] = x; }\n    void pop() { if(top >= 0) top--; }\n    int peek() { return arr[top]; }\n};"
+    },
+    {
+      "title": "Stack using Linked List",
+      "definition": "Dynamic stack.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n};\n\nclass Stack {\n    Node* top;\npublic:\n    Stack() { top = NULL; }\n    void push(int x) {\n        Node* temp = new Node();\n        temp->data = x;\n        temp->next = top;\n        top = temp;\n    }\n    void pop() {\n        if(top) {\n            Node* temp = top;\n            top = top->next;\n            delete temp;\n        }\n    }\n    int peek() { return top->data; }\n};"
+    },
+    {
+      "title": "Stack using Single Queue",
+      "definition": "Push costly (O(n)).",
+      "code": "#include <queue>\n#include <iostream>\nusing namespace std;\n\nclass Stack {\n    queue<int> q;\npublic:\n    void push(int x) {\n        int n = q.size();\n        q.push(x);\n        for(int i=0;i<n;i++) {\n            q.push(q.front());\n            q.pop();\n        }\n    }\n    void pop() { q.pop(); }\n    int top() { return q.front(); }\n};\n\nint main() {\n    Stack s;\n    s.push(10); s.push(20);\n    cout << s.top(); // 20\n}"
+    },
+    {
+      "title": "Stack using Two Queues",
+      "definition": "Alternative implementation.",
+      "code": "#include <queue>\n#include <iostream>\nusing namespace std;\n\nclass Stack {\n    queue<int> q1, q2;\npublic:\n    void push(int x) {\n        q2.push(x);\n        while(!q1.empty()) {\n            q2.push(q1.front());\n            q1.pop();\n        }\n        swap(q1, q2);\n    }\n    void pop() { q1.pop(); }\n    int top() { return q1.front(); }\n};"
+    },
+    {
+      "title": "Postfix Evaluation",
+      "definition": "Evaluate postfix expression using stack.",
+      "code": "#include <stack>\n#include <iostream>\nusing namespace std;\n\nint eval(string exp) {\n    stack<int> s;\n    for(char c : exp) {\n        if(isdigit(c)) s.push(c - '0');\n        else {\n            int b = s.top(); s.pop();\n            int a = s.top(); s.pop();\n            if(c == '+') s.push(a+b);\n            if(c == '-') s.push(a-b);\n        }\n    }\n    return s.top();\n}"
+    }
+  ]
+}

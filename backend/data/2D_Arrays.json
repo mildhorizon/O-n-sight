@@ -1,0 +1,47 @@
+{
+  "topic": "C++ 2D Arrays",
+  "description": "Comprehensive guide to two-dimensional arrays: declaration, initialization, accessing elements, row-major order, passing to functions, dynamic 2D arrays, and practical examples.",
+  "sections": [
+    {
+      "title": "What is a 2D Array?",
+      "definition": "A 2D array is an array of arrays. It represents a matrix or table with rows and columns. Elements are accessed using two indices: arr[row][col].",
+      "analogy": "A chessboard: rows 0-7, columns 0-7. Each cell is an element.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int matrix[3][4] = {\n        {1, 2, 3, 4},\n        {5, 6, 7, 8},\n        {9, 10, 11, 12}\n    };\n    \n    for (int i = 0; i < 3; i++) {\n        for (int j = 0; j < 4; j++) {\n            cout << matrix[i][j] << \"\\t\";\n        }\n        cout << endl;\n    }\n    return 0;\n}"
+    },
+    {
+      "title": "Declaring 2D Arrays",
+      "definition": "Syntax: type arrayName[rows][cols]; rows and cols must be compile-time constants for static arrays.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Declaration only (garbage values)\n    int grid[5][5];\n    \n    // Declaration with initialization\n    int arr1[2][3] = {{1,2,3}, {4,5,6}};\n    \n    // Can omit inner braces (row-major order)\n    int arr2[2][3] = {1,2,3,4,5,6};  // same as above\n    \n    // Partial initialization (remaining elements set to 0)\n    int arr3[2][3] = {{1,2}, {4}};   // {{1,2,0}, {4,0,0}}\n    \n    // Only first dimension can be omitted if initialized\n    int arr4[][3] = {{1,2,3}, {4,5,6}, {7,8,9}};  // rows deduced = 3\n    \n    // Initialize all to zero\n    int zero[10][10] = {0};\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Accessing 2D Array Elements",
+      "definition": "Use row index and column index. Both start at 0. Valid indices: row 0 to rows-1, col 0 to cols-1.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int matrix[3][3] = {{1,2,3}, {4,5,6}, {7,8,9}};\n    \n    // Access individual elements\n    cout << \"Top-left: \" << matrix[0][0] << endl;\n    cout << \"Center: \" << matrix[1][1] << endl;\n    cout << \"Bottom-right: \" << matrix[2][2] << endl;\n    \n    // Modify\n    matrix[0][1] = 99;\n    matrix[2][0] = matrix[1][1] + 10;\n    \n    // Row-major traversal\n    cout << \"Row-major order: \";\n    for (int i = 0; i < 3; i++) {\n        for (int j = 0; j < 3; j++) {\n            cout << matrix[i][j] << \" \";\n        }\n    }\n    cout << endl;\n    \n    // Column-major traversal\n    cout << \"Column-major order: \";\n    for (int j = 0; j < 3; j++) {\n        for (int i = 0; i < 3; i++) {\n            cout << matrix[i][j] << \" \";\n        }\n    }\n    cout << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Memory Layout (Row-Major Order)",
+      "definition": "C++ stores 2D arrays in row-major order: all elements of row 0 first, then row 1, etc. Contiguous memory.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[2][3] = {{1,2,3}, {4,5,6}};\n    int* p = &arr[0][0];\n    \n    cout << \"Memory addresses:\" << endl;\n    for (int i = 0; i < 2; i++) {\n        for (int j = 0; j < 3; j++) {\n            cout << \"arr[\" << i << \"][\" << j << \"] at \" << &arr[i][j] << \" = \" << arr[i][j] << endl;\n        }\n    }\n    \n    // Can traverse as 1D array (but careful with bounds)\n    cout << \"As 1D: \";\n    for (int i = 0; i < 6; i++) {\n        cout << *(p + i) << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Passing 2D Arrays to Functions",
+      "definition": "When passing 2D array, second dimension must be specified (or use pointer to array).",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Must specify column count (second dimension)\nvoid printMatrix(int mat[][4], int rows) {\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < 4; j++) {\n            cout << mat[i][j] << \"\\t\";\n        }\n        cout << endl;\n    }\n}\n\n// Using pointer to array of 4 ints\nvoid multiplyBy2(int (*mat)[4], int rows) {\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < 4; j++) {\n            mat[i][j] *= 2;\n        }\n    }\n}\n\n// Template to deduce dimensions (compile-time)\ntemplate<size_t rows, size_t cols>\nvoid printTemplate(int (&mat)[rows][cols]) {\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            cout << mat[i][j] << \" \";\n        }\n        cout << endl;\n    }\n}\n\nint main() {\n    int matrix[2][4] = {{1,2,3,4}, {5,6,7,8}};\n    \n    printMatrix(matrix, 2);\n    multiplyBy2(matrix, 2);\n    cout << \"After multiplyBy2:\" << endl;\n    printTemplate(matrix);  // template deduces 2,4\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Dynamic 2D Arrays",
+      "definition": "Several ways: array of pointers (each row separately) or single flat array with manual indexing.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int rows = 3, cols = 4;\n    \n    // Method 1: Array of pointers (each row on heap)\n    int** matrix = new int*[rows];\n    for (int i = 0; i < rows; i++) {\n        matrix[i] = new int[cols];\n        for (int j = 0; j < cols; j++) {\n            matrix[i][j] = i * cols + j;\n        }\n    }\n    \n    // Access\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            cout << matrix[i][j] << \"\\t\";\n        }\n        cout << endl;\n    }\n    \n    // Deallocate (reverse order)\n    for (int i = 0; i < rows; i++) {\n        delete[] matrix[i];\n    }\n    delete[] matrix;\n    \n    // Method 2: Flat array (single allocation, cache-friendly)\n    int* flat = new int[rows * cols];\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            flat[i * cols + j] = i * cols + j;\n        }\n    }\n    \n    // Access flat[i][j] as flat[i*cols + j]\n    delete[] flat;\n    \n    // Method 3: Using vector of vectors (modern C++, but slower)\n    // vector<vector<int>> v(rows, vector<int>(cols));\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Practical Examples: Matrix Operations",
+      "definition": "Common operations: addition, multiplication, transpose, etc.",
+      "code": "#include <iostream>\nusing namespace std;\n\nconst int ROWS = 2;\nconst int COLS = 3;\n\nvoid addMatrices(int A[][COLS], int B[][COLS], int C[][COLS]) {\n    for (int i = 0; i < ROWS; i++) {\n        for (int j = 0; j < COLS; j++) {\n            C[i][j] = A[i][j] + B[i][j];\n        }\n    }\n}\n\nvoid multiplyMatrices(int A[][COLS], int B[][2], int C[][2], int rA, int cA, int cB) {\n    // A: rA x cA, B: cA x cB, C: rA x cB\n    for (int i = 0; i < rA; i++) {\n        for (int j = 0; j < cB; j++) {\n            C[i][j] = 0;\n            for (int k = 0; k < cA; k++) {\n                C[i][j] += A[i][k] * B[k][j];\n            }\n        }\n    }\n}\n\nint main() {\n    int A[ROWS][COLS] = {{1,2,3}, {4,5,6}};\n    int B[ROWS][COLS] = {{7,8,9}, {10,11,12}};\n    int C[ROWS][COLS];\n    \n    addMatrices(A, B, C);\n    cout << \"Sum:\" << endl;\n    for (int i = 0; i < ROWS; i++) {\n        for (int j = 0; j < COLS; j++) {\n            cout << C[i][j] << \" \";\n        }\n        cout << endl;\n    }\n    \n    // Multiplication example\n    int X[2][3] = {{1,2,3}, {4,5,6}};\n    int Y[3][2] = {{7,8}, {9,10}, {11,12}};\n    int Z[2][2];\n    multiplyMatrices(X, Y, Z, 2, 3, 2);\n    cout << \"Product:\" << endl;\n    for (int i = 0; i < 2; i++) {\n        for (int j = 0; j < 2; j++) {\n            cout << Z[i][j] << \" \";\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}"
+    },
+    {
+      "title": "2D Arrays of Characters (Strings Array)",
+      "definition": "2D char arrays can store multiple strings. Each row is a C-style string.",
+      "code": "#include <iostream>\n#include <cstring>\nusing namespace std;\n\nint main() {\n    char names[3][20] = {\"Alice\", \"Bob\", \"Charlie\"};\n    \n    for (int i = 0; i < 3; i++) {\n        cout << \"Name \" << i+1 << \": \" << names[i] << endl;\n    }\n    \n    // Modify\n    strcpy(names[1], \"Robert\");\n    cout << \"After change: \" << names[1] << endl;\n    \n    return 0;\n}"
+    }
+  ]
+}

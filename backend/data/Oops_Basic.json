@@ -1,0 +1,56 @@
+{
+  "topic": "C++ Object-Oriented Programming Basics",
+  "description": "Foundational OOP concepts: classes, objects, constructors, destructors, access specifiers, this pointer, static members, and member functions. Many examples for beginners.",
+  "sections": [
+    {
+      "title": "What is OOP?",
+      "definition": "Object-Oriented Programming organizes code around 'objects' that contain data (attributes) and functions (methods). It models real-world entities.",
+      "analogy": "A Car is an object with attributes (color, model, speed) and methods (accelerate, brake).",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Simple Car class\nclass Car {\npublic:\n    string color;\n    string model;\n    void drive() {\n        cout << model << \" is driving\" << endl;\n    }\n};\n\nint main() {\n    Car myCar;\n    myCar.color = \"Red\";\n    myCar.model = \"Sedan\";\n    myCar.drive();\n    return 0;\n}",
+      "output": "Sedan is driving"
+    },
+    {
+      "title": "Classes and Objects",
+      "definition": "A class is a blueprint. An object is an instance of a class. Class defines data and behavior; object uses them.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Student {\npublic:\n    string name;\n    int age;\n    void introduce() {\n        cout << \"Hi, I'm \" << name << \", age \" << age << endl;\n    }\n};\n\nint main() {\n    Student s1;   // object\n    s1.name = \"Alice\";\n    s1.age = 20;\n    s1.introduce();\n    \n    Student s2;   // another object\n    s2.name = \"Bob\";\n    s2.age = 22;\n    s2.introduce();\n    return 0;\n}",
+      "output": "Hi, I'm Alice, age 20\nHi, I'm Bob, age 22"
+    },
+    {
+      "title": "Access Specifiers",
+      "definition": "public: accessible anywhere. private: only inside the class. protected: inside class and derived classes. Encapsulation hides internal details.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass BankAccount {\nprivate:\n    double balance;   // hidden from outside\npublic:\n    string owner;\n    \n    void deposit(double amount) {\n        if (amount > 0) balance += amount;\n    }\n    \n    double getBalance() {\n        return balance;\n    }\n};\n\nint main() {\n    BankAccount acc;\n    acc.owner = \"John\";\n    // acc.balance = 1000; // ERROR: private\n    acc.deposit(500);\n    cout << \"Balance: \" << acc.getBalance() << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "Constructors",
+      "definition": "A constructor is a special member function called automatically when an object is created. Same name as class, no return type. Can be overloaded.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Point {\npublic:\n    int x, y;\n    \n    // Default constructor\n    Point() {\n        x = 0; y = 0;\n        cout << \"Default constructor\" << endl;\n    }\n    \n    // Parameterized constructor\n    Point(int a, int b) {\n        x = a; y = b;\n        cout << \"Parameterized constructor\" << endl;\n    }\n    \n    // Constructor with default arguments\n    Point(int a) : x(a), y(a) {\n        cout << \"Constructor with default\" << endl;\n    }\n    \n    void display() {\n        cout << \"(\" << x << \",\" << y << \")\" << endl;\n    }\n};\n\nint main() {\n    Point p1;        // default\n    Point p2(3, 4);  // parameterized\n    Point p3(5);     // constructor with default\n    p1.display();\n    p2.display();\n    p3.display();\n    return 0;\n}"
+    },
+    {
+      "title": "Constructor Initialization List",
+      "definition": "Initialization list initializes member variables before constructor body runs. More efficient than assignment, required for const and reference members.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Person {\nprivate:\n    const int id;    // const must be initialized in list\n    string name;\n    int& ageRef;     // reference must be initialized\npublic:\n    Person(int i, string n, int& a) : id(i), name(n), ageRef(a) {\n        cout << \"Constructor body\" << endl;\n    }\n    void display() {\n        cout << \"ID: \" << id << \", Name: \" << name << \", AgeRef: \" << ageRef << endl;\n    }\n};\n\nint main() {\n    int age = 25;\n    Person p(101, \"Alice\", age);\n    p.display();\n    return 0;\n}"
+    },
+    {
+      "title": "Destructors",
+      "definition": "Destructor is called when object is destroyed (goes out of scope or delete). Name ~Class, no parameters, no return. Used for cleanup (free memory, close files).",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Resource {\npublic:\n    Resource() {\n        cout << \"Resource acquired\" << endl;\n    }\n    ~Resource() {\n        cout << \"Resource released\" << endl;\n    }\n    void use() {\n        cout << \"Using resource\" << endl;\n    }\n};\n\nint main() {\n    {\n        Resource r;\n        r.use();\n    } // r destroyed here, destructor called\n    cout << \"After block\" << endl;\n    return 0;\n}",
+      "output": "Resource acquired\nUsing resource\nResource released\nAfter block"
+    },
+    {
+      "title": "this Pointer",
+      "definition": "this is a pointer to the current object. Used inside member functions to access the object's members, especially when parameter names shadow member names.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Box {\nprivate:\n    int length;\npublic:\n    Box(int length) {\n        this->length = length;  // this resolves name conflict\n    }\n    Box& setLength(int len) {\n        this->length = len;\n        return *this;   // return reference to current object for chaining\n    }\n    void display() {\n        cout << \"Length: \" << this->length << endl;\n    }\n};\n\nint main() {\n    Box b(10);\n    b.display();\n    b.setLength(20).setLength(30).display(); // chaining\n    return 0;\n}"
+    },
+    {
+      "title": "Static Members",
+      "definition": "Static members belong to the class, not individual objects. One copy shared across all objects. Static functions can only access static members.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Counter {\nprivate:\n    static int count;   // static member declaration\n    int id;\npublic:\n    Counter() {\n        id = ++count;\n    }\n    static int getCount() {   // static function\n        return count;\n    }\n    void showId() {\n        cout << \"Object ID: \" << id << endl;\n    }\n};\n\n// Definition and initialization of static member\nint Counter::count = 0;\n\nint main() {\n    Counter c1, c2, c3;\n    c1.showId();\n    c2.showId();\n    c3.showId();\n    cout << \"Total objects: \" << Counter::getCount() << endl;\n    return 0;\n}",
+      "output": "Object ID: 1\nObject ID: 2\nObject ID: 3\nTotal objects: 3"
+    },
+    {
+      "title": "Const Member Functions",
+      "definition": "Const member functions promise not to modify the object. They can be called on const objects. Mark with const after parameter list.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Data {\nprivate:\n    int value;\npublic:\n    Data(int v) : value(v) {}\n    int getValue() const {   // const member function\n        // value = 10; // ERROR: cannot modify\n        return value;\n    }\n    void setValue(int v) {\n        value = v;\n    }\n};\n\nint main() {\n    const Data d1(42);   // const object\n    cout << d1.getValue() << endl;\n    // d1.setValue(99);  // ERROR: cannot call non-const on const object\n    \n    Data d2(100);\n    d2.setValue(200);\n    cout << d2.getValue() << endl;\n    return 0;\n}"
+    }
+  ]
+}

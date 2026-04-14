@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
+
+:root {
+  --bg-color: #fdfaf3;                /* Warm newspaper cream */
+  --glass-bg: rgba(253, 250, 243, 0.8);
+  --glass-border: rgba(80, 60, 40, 0.2);
+  --text-main: #2c2416;               /* Deep ink brown */
+  --text-muted: #6b5a4a;
+  --accent: #9e3b33;                  /* Vintage red ink */
+  --accent-glow: rgba(158, 59, 51, 0.15);
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Crimson Text', serif;
+
+  /* Subtle paper texture (noise + grain) */
+  --bg-texture: repeating-linear-gradient(
+      45deg,
+      rgba(180, 160, 140, 0.02) 0px,
+      rgba(180, 160, 140, 0.02) 2px,
+      transparent 2px,
+      transparent 6px
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  --bg-size: auto, 200px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  background-color: var(--bg-color) !important;
+  background-image: var(--bg-texture) !important;
+  background-size: var(--bg-size) !important;
+  color: var(--text-main) !important;
+  min-height: 100vh;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.logic-btn {
+  background: var(--bg-color);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 0 0 0 var(--accent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.logic-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--bg-color);
+  box-shadow: 0 0 8px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.logic-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: var(--glass-border);
+  color: var(--text-muted);
+}

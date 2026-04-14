@@ -1,0 +1,56 @@
+{
+  "topic": "OOPS and Pointers in C++",
+  "description": "Deep dive into object pointers, pointer to members, polymorphism with pointers, virtual functions, dynamic object allocation, and advanced pointer-oop integration.",
+  "sections": [
+    {
+      "title": "Object Pointers",
+      "definition": "Pointers can point to objects. Use -> operator to access members. Useful for dynamic allocation and polymorphism.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Student {\npublic:\n    string name;\n    int roll;\n    void display() {\n        cout << name << \" (\" << roll << \")\" << endl;\n    }\n};\n\nint main() {\n    Student s1 = {\"Alice\", 101};\n    Student* ptr = &s1;\n    \n    // Access via pointer\n    cout << ptr->name << endl;\n    ptr->display();\n    \n    // Dynamic object\n    Student* s2 = new Student{\"Bob\", 102};\n    s2->display();\n    delete s2;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Pointer to Derived Class",
+      "definition": "Base class pointer can point to derived class object. This enables runtime polymorphism. Derived pointer cannot point to base object.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Base {\npublic:\n    virtual void show() { cout << \"Base\" << endl; }\n};\n\nclass Derived : public Base {\npublic:\n    void show() override { cout << \"Derived\" << endl; }\n    void onlyDerived() { cout << \"Derived specific\" << endl; }\n};\n\nint main() {\n    Base* bptr;\n    Derived d;\n    bptr = &d;   // base pointer to derived object\n    bptr->show(); // Derived (due to virtual)\n    // bptr->onlyDerived(); // ERROR: base pointer doesn't know derived members\n    \n    // Downcasting (use dynamic_cast)\n    Derived* dptr = dynamic_cast<Derived*>(bptr);\n    if (dptr) dptr->onlyDerived();\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Virtual Functions and Dynamic Binding",
+      "definition": "Virtual functions allow correct function selection at runtime based on actual object type, not pointer type. Achieved via vtable.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Instrument {\npublic:\n    virtual void play() {\n        cout << \"Instrument playing\" << endl;\n    }\n};\n\nclass Guitar : public Instrument {\npublic:\n    void play() override {\n        cout << \"Strumming guitar\" << endl;\n    }\n};\n\nclass Piano : public Instrument {\npublic:\n    void play() override {\n        cout << \"Playing piano keys\" << endl;\n    }\n};\n\nint main() {\n    Instrument* arr[3];\n    arr[0] = new Instrument();\n    arr[1] = new Guitar();\n    arr[2] = new Piano();\n    \n    for (int i = 0; i < 3; i++) {\n        arr[i]->play();\n        delete arr[i];\n    }\n    return 0;\n}"
+    },
+    {
+      "title": "Virtual Destructors",
+      "definition": "Base class destructor should be virtual when deleting derived objects via base pointer. Otherwise, derived destructor not called, causing resource leak.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Base {\npublic:\n    Base() { cout << \"Base ctor\" << endl; }\n    // virtual ~Base() { cout << \"Base dtor\" << endl; } // correct\n    ~Base() { cout << \"Base dtor\" << endl; } // non-virtual - problem\n};\n\nclass Derived : public Base {\npublic:\n    int* data;\n    Derived() : data(new int[100]) { cout << \"Derived ctor, allocated memory\" << endl; }\n    ~Derived() { delete[] data; cout << \"Derived dtor, freed memory\" << endl; }\n};\n\nint main() {\n    Base* ptr = new Derived();\n    delete ptr;  // Without virtual ~Base(), only Base destructor called → memory leak!\n    return 0;\n}"
+    },
+    {
+      "title": "Pointer to Member Functions",
+      "definition": "Pointers can point to member functions. Syntax: return_type (ClassName::*ptr)(params). Use .* or ->* to invoke.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Calculator {\npublic:\n    int add(int a, int b) { return a + b; }\n    int multiply(int a, int b) { return a * b; }\n};\n\nint main() {\n    // Pointer to member function of Calculator that takes two ints and returns int\n    int (Calculator::*funcPtr)(int, int);\n    \n    Calculator calc;\n    funcPtr = &Calculator::add;\n    cout << (calc.*funcPtr)(3, 4) << endl;  // 7\n    \n    funcPtr = &Calculator::multiply;\n    cout << (calc.*funcPtr)(3, 4) << endl;  // 12\n    \n    // Using with pointer to object\n    Calculator* pCalc = &calc;\n    cout << (pCalc->*funcPtr)(5, 6) << endl; // 30\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Pointer to Data Members",
+      "definition": "Pointers can point to member variables. Syntax: type ClassName::*ptr = &ClassName::member.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Person {\n    string name;\n    int age;\n};\n\nint main() {\n    // Pointer to member 'age'\n    int Person::*agePtr = &Person::age;\n    string Person::*namePtr = &Person::name;\n    \n    Person p1 = {\"Alice\", 25};\n    Person p2 = {\"Bob\", 30};\n    \n    cout << p1.*agePtr << endl;   // 25\n    cout << p2.*namePtr << endl;   // Bob\n    \n    // Using with pointer to object\n    Person* p = &p1;\n    cout << p->*agePtr << endl;    // 25\n    \n    return 0;\n}"
+    },
+    {
+      "title": "this Pointer in Depth",
+      "definition": "this is a hidden pointer inside every non-static member function pointing to the current object. Used for chaining, resolving name conflicts, and CRTP.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Chainable {\nprivate:\n    int value;\npublic:\n    Chainable& setValue(int v) {\n        value = v;\n        return *this;\n    }\n    Chainable& add(int v) {\n        value += v;\n        return *this;\n    }\n    Chainable& multiply(int v) {\n        value *= v;\n        return *this;\n    }\n    void print() const {\n        cout << \"Value: \" << value << endl;\n    }\n};\n\nint main() {\n    Chainable obj;\n    obj.setValue(5).add(3).multiply(2).print();  // 5+3=8, *2=16\n    return 0;\n}"
+    },
+    {
+      "title": "Array of Pointers to Objects",
+      "definition": "Useful for polymorphic containers: store base class pointers to derived objects.",
+      "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Media {\npublic:\n    virtual void play() = 0;\n    virtual ~Media() {}\n};\n\nclass Audio : public Media {\npublic:\n    void play() override { cout << \"Playing audio\" << endl; }\n};\n\nclass Video : public Media {\npublic:\n    void play() override { cout << \"Playing video\" << endl; }\n};\n\nint main() {\n    const int SIZE = 3;\n    Media* playlist[SIZE];\n    playlist[0] = new Audio();\n    playlist[1] = new Video();\n    playlist[2] = new Audio();\n    \n    for (int i = 0; i < SIZE; i++) {\n        playlist[i]->play();\n        delete playlist[i];\n    }\n    \n    // Better: vector of smart pointers\n    vector<unique_ptr<Media>> vec;\n    vec.push_back(make_unique<Audio>());\n    vec.push_back(make_unique<Video>());\n    for (auto& m : vec) m->play();\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Dynamic Object Creation with new/delete",
+      "definition": "Objects can be allocated on heap using new, destroyed with delete. new calls constructor, delete calls destructor.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Complex {\n    double re, im;\npublic:\n    Complex(double r = 0, double i = 0) : re(r), im(i) {\n        cout << \"Complex created: \" << re << \"+\" << im << \"i\" << endl;\n    }\n    ~Complex() {\n        cout << \"Complex destroyed: \" << re << \"+\" << im << \"i\" << endl;\n    }\n    void display() const {\n        cout << re << \" + \" << im << \"i\" << endl;\n    }\n};\n\nint main() {\n    Complex* c1 = new Complex(3, 4);\n    c1->display();\n    delete c1;  // destructor called\n    \n    // Array of objects\n    Complex* arr = new Complex[3]{{1,1}, {2,2}, {3,3}};\n    delete[] arr;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Function Pointers vs Virtual Functions",
+      "definition": "Function pointers can mimic polymorphism but are less flexible. Virtual functions are preferred for OOP.",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Using function pointers\nvoid dogSound() { cout << \"Woof\" << endl; }\nvoid catSound() { cout << \"Meow\" << endl; }\n\n// Using virtual functions\nclass Animal {\npublic:\n    virtual void sound() = 0;\n};\nclass Dog : public Animal { void sound() override { cout << \"Woof\" << endl; } };\nclass Cat : public Animal { void sound() override { cout << \"Meow\" << endl; } };\n\nint main() {\n    // Function pointer approach\n    void (*sounds[2])() = {dogSound, catSound};\n    for (int i = 0; i < 2; i++) sounds[i]();\n    \n    // Virtual function approach (more OOP)\n    Animal* animals[2] = {new Dog(), new Cat()};\n    for (auto a : animals) a->sound();\n    for (auto a : animals) delete a;\n    \n    return 0;\n}"
+    }
+  ]
+}

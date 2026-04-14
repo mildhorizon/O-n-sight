@@ -1,0 +1,67 @@
+{
+  "topic": "C++ Pointer Basics",
+  "description": "A patient, in-depth introduction to pointers: what they are, how to declare, assign, dereference, pointer arithmetic, pointers and arrays, pointers to pointers, and const with pointers. Many examples.",
+  "sections": [
+    {
+      "title": "What is a Pointer?",
+      "definition": "A pointer is a variable that stores the memory address of another variable. Instead of holding a value directly, it 'points to' where the value lives in memory.",
+      "analogy": "Think of a house: a normal variable contains the person (value). A pointer contains the address (street number) where that person lives. With the address, you can find the person.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 42;           // normal variable, holds value 42\n    int* ptr = &x;        // pointer holds address of x\n    \n    cout << \"Value of x: \" << x << endl;\n    cout << \"Address of x: \" << &x << endl;\n    cout << \"Value of ptr (address stored): \" << ptr << endl;\n    cout << \"Value pointed to by ptr: \" << *ptr << endl;\n    return 0;\n}",
+      "output": "Value of x: 42\nAddress of x: 0x7ffd5e2b3a1c\nValue of ptr (address stored): 0x7ffd5e2b3a1c\nValue pointed to by ptr: 42"
+    },
+    {
+      "title": "Declaring Pointers",
+      "definition": "Declare a pointer by adding * after the type. int* p means 'p is a pointer to an integer'. The * binds to the variable name, but spacing doesn't matter.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int* ptr1;      // pointer to int (uninitialized – holds garbage address)\n    double* ptr2;   // pointer to double\n    char* ptr3;     // pointer to char\n    \n    // Multiple pointers in one line\n    int a, b, c;\n    int *p1, *p2, *p3;  // three pointers\n    int* p4, d;         // p4 is pointer, d is int (watch out!)\n    \n    cout << \"Size of pointer (int*) on this system: \" << sizeof(ptr1) << \" bytes\" << endl;\n    // On 64-bit system, pointer size is usually 8 bytes\n    return 0;\n}"
+    },
+    {
+      "title": "Address-of Operator (&)",
+      "definition": "The & operator gives the memory address of a variable. Use it to assign an address to a pointer.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int number = 100;\n    int* ptr = &number;  // ptr now holds address of number\n    \n    cout << \"number = \" << number << endl;\n    cout << \"&number = \" << &number << endl;\n    cout << \"ptr = \" << ptr << endl;\n    \n    // Different variables have different addresses\n    int another = 200;\n    ptr = &another;      // ptr now points to another\n    cout << \"After repointing: ptr = \" << ptr << \", value = \" << *ptr << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Dereference Operator (*)",
+      "definition": "The * operator (when used on a pointer) accesses the value stored at the address the pointer holds. This is called dereferencing.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int value = 42;\n    int* ptr = &value;\n    \n    cout << \"Before change: value = \" << value << endl;\n    \n    // Dereference to read\n    int copy = *ptr;\n    cout << \"copy from pointer: \" << copy << endl;\n    \n    // Dereference to modify the original variable\n    *ptr = 99;\n    cout << \"After *ptr = 99: value = \" << value << endl;\n    \n    // ptr still points to value\n    (*ptr)++;   // increment the value at that address\n    cout << \"After (*ptr)++: value = \" << value << endl;\n    \n    return 0;\n}",
+      "output": "Before change: value = 42\ncopy from pointer: 42\nAfter *ptr = 99: value = 99\nAfter (*ptr)++: value = 100"
+    },
+    {
+      "title": "Null Pointers",
+      "definition": "A null pointer points to nothing (address 0). It's good practice to initialize pointers to nullptr (C++11) or NULL to avoid dangling pointers.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int* ptr1 = nullptr;  // modern C++\n    int* ptr2 = NULL;     // old C style\n    int* ptr3 = 0;        // also works\n    \n    if (ptr1 == nullptr) {\n        cout << \"ptr1 is null\" << endl;\n    }\n    \n    // Dereferencing a null pointer causes crash (segmentation fault)\n    // int* bad = nullptr;\n    // *bad = 5;  // DON'T DO THIS\n    \n    // Always check before dereferencing\n    int* ptr = nullptr;\n    if (ptr != nullptr) {\n        *ptr = 10;\n    } else {\n        cout << \"ptr is null, safe to skip\" << endl;\n    }\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Pointers and Functions (Pass by Pointer)",
+      "definition": "Passing a pointer to a function allows the function to modify the original variable (like pass by reference, but explicit).",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid increment(int* p) {\n    (*p)++;   // modify the value at the address\n}\n\nvoid swap(int* a, int* b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nint main() {\n    int x = 5;\n    cout << \"Before increment: \" << x << endl;\n    increment(&x);   // pass address of x\n    cout << \"After increment: \" << x << endl;\n    \n    int p = 10, q = 20;\n    cout << \"Before swap: p=\" << p << \", q=\" << q << endl;\n    swap(&p, &q);\n    cout << \"After swap: p=\" << p << \", q=\" << q << endl;\n    \n    return 0;\n}",
+      "output": "Before increment: 5\nAfter increment: 6\nBefore swap: p=10, q=20\nAfter swap: p=20, q=10"
+    },
+    {
+      "title": "Pointer Arithmetic",
+      "definition": "Adding an integer to a pointer moves it by that many elements, not bytes. Incrementing an int* moves by 4 bytes (size of int).",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[] = {10, 20, 30, 40, 50};\n    int* ptr = arr;  // points to first element (arr[0])\n    \n    cout << \"ptr points to: \" << *ptr << endl;     // 10\n    ptr++;\n    cout << \"After ptr++: \" << *ptr << endl;       // 20\n    ptr += 2;\n    cout << \"After ptr+=2: \" << *ptr << endl;      // 40\n    ptr--;\n    cout << \"After ptr--: \" << *ptr << endl;       // 30\n    \n    // Difference between pointers\n    int* start = arr;\n    int* end = &arr[4];\n    cout << \"Number of elements between: \" << (end - start) << endl;  // 4\n    \n    // Compare pointers\n    if (start < end) cout << \"start is before end\" << endl;\n    \n    return 0;\n}",
+      "output": "ptr points to: 10\nAfter ptr++: 20\nAfter ptr+=2: 40\nAfter ptr--: 30\nNumber of elements between: 4\nstart is before end"
+    },
+    {
+      "title": "Pointers and Arrays",
+      "definition": "Array name is a constant pointer to the first element. arr[i] is equivalent to *(arr + i).",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int numbers[] = {5, 10, 15, 20};\n    \n    // Array name acts as pointer to first element\n    int* ptr = numbers;  // same as &numbers[0]\n    \n    // Accessing via pointer arithmetic\n    for (int i = 0; i < 4; i++) {\n        cout << *(numbers + i) << \" \";   // numbers[i]\n    }\n    cout << endl;\n    \n    // Using pointer to iterate\n    for (int* p = numbers; p < numbers + 4; p++) {\n        cout << *p << \" \";\n    }\n    cout << endl;\n    \n    // sizeof difference: array vs pointer\n    cout << \"Size of array: \" << sizeof(numbers) << \" bytes\" << endl;\n    cout << \"Size of pointer: \" << sizeof(ptr) << \" bytes\" << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Pointers to Pointers (Double Pointers)",
+      "definition": "A pointer that stores the address of another pointer. Declared with **. Useful for modifying pointer arguments in functions or for 2D dynamic arrays.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int value = 42;\n    int* ptr = &value;      // pointer to int\n    int** ptr2 = &ptr;      // pointer to pointer to int\n    \n    cout << \"value = \" << value << endl;\n    cout << \"*ptr = \" << *ptr << endl;\n    cout << \"**ptr2 = \" << **ptr2 << endl;\n    \n    // Changing value through double pointer\n    **ptr2 = 99;\n    cout << \"After **ptr2 = 99, value = \" << value << endl;\n    \n    // Repointing the original pointer via double pointer\n    int another = 100;\n    *ptr2 = &another;       // changes ptr to point to another\n    cout << \"Now *ptr = \" << *ptr << endl;  // 100\n    \n    return 0;\n}",
+      "output": "value = 42\n*ptr = 42\n**ptr2 = 42\nAfter **ptr2 = 99, value = 99\nNow *ptr = 100"
+    },
+    {
+      "title": "const and Pointers",
+      "definition": "const can be applied to the pointer itself or the pointed-to data. Four combinations: pointer to const, const pointer, const pointer to const.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 10, b = 20;\n    \n    // 1. Pointer to const: cannot change the value via pointer\n    const int* p1 = &a;\n    // *p1 = 30;  // ERROR: *p1 is const\n    p1 = &b;      // OK: pointer itself can change\n    \n    // 2. Const pointer: cannot change where it points\n    int* const p2 = &a;\n    *p2 = 30;     // OK: can change value\n    // p2 = &b;   // ERROR: p2 is const\n    \n    // 3. Const pointer to const: cannot change either\n    const int* const p3 = &a;\n    // *p3 = 30;  // ERROR\n    // p3 = &b;   // ERROR\n    \n    // 4. Pointer to non-const (normal)\n    int* p4 = &a;\n    *p4 = 50;\n    p4 = &b;\n    \n    cout << \"a = \" << a << \", b = \" << b << endl;\n    \n    // Common use: function parameter to avoid copying but prevent modification\n    // void print(const int* p) { ... }\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Void Pointers (void*)",
+      "definition": "void* can hold address of any data type, but cannot be dereferenced without casting. Used for generic programming.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int i = 42;\n    double d = 3.14;\n    char c = 'A';\n    \n    void* vptr;\n    \n    vptr = &i;\n    cout << \"int value: \" << *(static_cast<int*>(vptr)) << endl;\n    \n    vptr = &d;\n    cout << \"double value: \" << *(static_cast<double*>(vptr)) << endl;\n    \n    vptr = &c;\n    cout << \"char value: \" << *(static_cast<char*>(vptr)) << endl;\n    \n    // Cannot do pointer arithmetic on void*\n    // vptr++; // ERROR: void has no size\n    \n    return 0;\n}"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "topic": "Queue Basics",
+  "description": "Complete deep dive into queues including implementations and conversions.",
+  "sections": [
+    {
+      "title": "What is a Queue?",
+      "definition": "Queue follows FIFO.",
+      "analogy": "Line at counter.",
+      "code": "#include <queue>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    queue<int> q;\n    q.push(10);\n    q.push(20);\n    cout << q.front(); // 10\n}"
+    },
+    {
+      "title": "Queue using Array",
+      "definition": "Implemented with front and rear.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Queue {\n    int arr[100];\n    int front, rear;\npublic:\n    Queue() { front = rear = -1; }\n    void enqueue(int x) {\n        if(front == -1) front = 0;\n        arr[++rear] = x;\n    }\n    void dequeue() { front++; }\n    int getFront() { return arr[front]; }\n};"
+    },
+    {
+      "title": "Queue using Linked List",
+      "definition": "Dynamic queue.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n};\n\nclass Queue {\n    Node *front, *rear;\npublic:\n    Queue() { front = rear = NULL; }\n    void enqueue(int x) {\n        Node* temp = new Node();\n        temp->data = x;\n        temp->next = NULL;\n        if(!rear) front = rear = temp;\n        else {\n            rear->next = temp;\n            rear = temp;\n        }\n    }\n    void dequeue() {\n        if(front) {\n            Node* temp = front;\n            front = front->next;\n            delete temp;\n        }\n    }\n};"
+    },
+    {
+      "title": "Circular Queue",
+      "definition": "Efficient reuse using modulo.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass CircularQueue {\n    int arr[5];\n    int front, rear;\npublic:\n    CircularQueue() { front = rear = -1; }\n    void enqueue(int x) {\n        if((rear+1)%5 == front) return;\n        if(front == -1) front = 0;\n        rear = (rear+1)%5;\n        arr[rear] = x;\n    }\n};"
+    },
+    {
+      "title": "Queue using Two Stacks",
+      "definition": "Simulate FIFO using LIFO.",
+      "code": "#include <stack>\n#include <iostream>\nusing namespace std;\n\nclass Queue {\n    stack<int> s1, s2;\npublic:\n    void enqueue(int x) { s1.push(x); }\n    void dequeue() {\n        if(s2.empty()) {\n            while(!s1.empty()) {\n                s2.push(s1.top());\n                s1.pop();\n            }\n        }\n        s2.pop();\n    }\n    int front() {\n        if(s2.empty()) {\n            while(!s1.empty()) {\n                s2.push(s1.top());\n                s1.pop();\n            }\n        }\n        return s2.top();\n    }\n};"
+    },
+    {
+      "title": "BFS Traversal",
+      "definition": "Queue used in graph traversal.",
+      "code": "#include <iostream>\n#include <vector>\n#include <queue>\nusing namespace std;\n\nvoid bfs(int start, vector<int> adj[]) {\n    queue<int> q;\n    q.push(start);\n    vector<bool> visited(100, false);\n    visited[start] = true;\n\n    while(!q.empty()) {\n        int node = q.front(); q.pop();\n        cout << node << \" \";\n        for(int neigh : adj[node]) {\n            if(!visited[neigh]) {\n                visited[neigh] = true;\n                q.push(neigh);\n            }\n        }\n    }\n}"
+    }
+  ]
+}

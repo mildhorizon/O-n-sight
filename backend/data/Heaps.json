@@ -1,0 +1,46 @@
+{
+  "topic": "Heaps",
+  "description": "Complete guide to heaps including min heap, max heap, heapify, heap sort, and priority queues.",
+  "sections": [
+    {
+      "title": "What is a Heap?",
+      "definition": "A complete binary tree satisfying heap property.",
+      "code": "// Array representation\n// Left child = 2*i+1\n// Right child = 2*i+2"
+    },
+    {
+      "title": "Heapify (Max Heap)",
+      "definition": "Fix heap property.",
+      "code": "void heapify(int arr[], int n, int i) {\n    int largest = i;\n    int l = 2*i+1, r = 2*i+2;\n    if(l<n && arr[l]>arr[largest]) largest=l;\n    if(r<n && arr[r]>arr[largest]) largest=r;\n    if(largest!=i) {\n        swap(arr[i], arr[largest]);\n        heapify(arr,n,largest);\n    }\n}"
+    },
+    {
+      "title": "Build Heap",
+      "definition": "Convert array into heap.",
+      "code": "void buildHeap(int arr[], int n) {\n    for(int i=n/2-1;i>=0;i--)\n        heapify(arr,n,i);\n}"
+    },
+    {
+      "title": "Heap Sort",
+      "definition": "Sort using heap.",
+      "code": "void heapSort(int arr[], int n) {\n    buildHeap(arr,n);\n    for(int i=n-1;i>0;i--) {\n        swap(arr[0], arr[i]);\n        heapify(arr,i,0);\n    }\n}"
+    },
+    {
+      "title": "Min Heap using Priority Queue",
+      "definition": "C++ STL implementation.",
+      "code": "#include <queue>\nusing namespace std;\n\npriority_queue<int, vector<int>, greater<int>> minHeap;"
+    },
+    {
+      "title": "Insert in Heap",
+      "definition": "Insert and heapify up.",
+      "code": "void insert(vector<int>& heap, int val) {\n    heap.push_back(val);\n    int i = heap.size()-1;\n    while(i>0 && heap[(i-1)/2] < heap[i]) {\n        swap(heap[i], heap[(i-1)/2]);\n        i = (i-1)/2;\n    }\n}"
+    },
+    {
+      "title": "Delete from Heap",
+      "definition": "Remove root and heapify.",
+      "code": "void deleteRoot(vector<int>& heap) {\n    heap[0] = heap.back();\n    heap.pop_back();\n    heapify(heap.data(), heap.size(), 0);\n}"
+    },
+    {
+      "title": "Applications of Heap",
+      "definition": "Priority queue, Dijkstra, scheduling, median finding.",
+      "code": "// Used in Dijkstra and scheduling"
+    }
+  ]
+}

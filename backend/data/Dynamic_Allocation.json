@@ -1,0 +1,61 @@
+{
+  "topic": "C++ Dynamic Memory Allocation",
+  "description": "In-depth guide to dynamic allocation using new and delete. Covers single objects, arrays, memory leaks, dangling pointers, and best practices. No smart pointers yet.",
+  "sections": [
+    {
+      "title": "Why Dynamic Allocation?",
+      "definition": "Static allocation (int x;) happens at compile time on the stack. Dynamic allocation happens at runtime on the heap, allowing variable size and lifetime control beyond the scope.",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Static allocation: size must be known at compile time\nint fixedArray[100];  // OK\n\nint main() {\n    int n;\n    cout << \"Enter array size: \";\n    cin >> n;\n    \n    // int bad[n]; // VLA not standard in C++ (though some compilers allow)\n    // Instead, dynamic allocation:\n    int* dynArray = new int[n];  // allocate array of size n at runtime\n    \n    for (int i = 0; i < n; i++) {\n        dynArray[i] = i * 10;\n    }\n    \n    for (int i = 0; i < n; i++) {\n        cout << dynArray[i] << \" \";\n    }\n    cout << endl;\n    \n    delete[] dynArray;  // must free\n    return 0;\n}"
+    },
+    {
+      "title": "new and delete for Single Objects",
+      "definition": "Use new to allocate one object on the heap. Returns a pointer. Use delete to free it. If you forget delete, memory leaks.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Allocate a single integer on heap\n    int* p = new int;      // uninitialized\n    *p = 42;\n    cout << \"Value: \" << *p << endl;\n    \n    // Allocate and initialize\n    int* q = new int(100);  // direct initialization\n    cout << \"Initialized: \" << *q << endl;\n    \n    // Allocate with uniform initialization (C++11)\n    int* r = new int{200};\n    cout << \"Uniform init: \" << *r << endl;\n    \n    // Free memory\n    delete p;\n    delete q;\n    delete r;\n    \n    // After delete, pointer becomes dangling (still holds old address)\n    // Setting to nullptr is good practice\n    p = nullptr;\n    q = nullptr;\n    r = nullptr;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "new and delete for Arrays",
+      "definition": "Use new[] to allocate an array on heap. Returns pointer to first element. Use delete[] to free. Must match new[] with delete[] (not delete).",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int size = 5;\n    int* arr = new int[size];   // allocate array, uninitialized\n    \n    // Initialize\n    for (int i = 0; i < size; i++) {\n        arr[i] = i * 2;\n    }\n    \n    // Access\n    for (int i = 0; i < size; i++) {\n        cout << arr[i] << \" \";\n    }\n    cout << endl;\n    \n    // Array with initialization (C++11)\n    int* arr2 = new int[5]{10, 20, 30, 40, 50};\n    for (int i = 0; i < 5; i++) {\n        cout << arr2[i] << \" \";\n    }\n    cout << endl;\n    \n    // Free memory\n    delete[] arr;\n    delete[] arr2;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Dynamic Allocation of Objects",
+      "definition": "new calls constructor, delete calls destructor. Works with classes and structs.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Student {\npublic:\n    string name;\n    int id;\n    \n    Student(string n, int i) : name(n), id(i) {\n        cout << \"Constructor called for \" << name << endl;\n    }\n    \n    ~Student() {\n        cout << \"Destructor called for \" << name << endl;\n    }\n    \n    void display() {\n        cout << \"Student: \" << name << \", ID: \" << id << endl;\n    }\n};\n\nint main() {\n    // Allocate single object\n    Student* s1 = new Student(\"Alice\", 101);\n    s1->display();\n    delete s1;  // calls destructor\n    \n    // Allocate array of objects\n    Student* classRoom = new Student[3]{\n        {\"Bob\", 201},\n        {\"Charlie\", 202},\n        {\"Diana\", 203}\n    };\n    \n    for (int i = 0; i < 3; i++) {\n        classRoom[i].display();\n    }\n    \n    delete[] classRoom;  // calls destructor for each\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Memory Leaks",
+      "definition": "A memory leak occurs when you allocate memory with new but never delete it. The memory remains allocated until program ends, causing waste and eventual crash if repeated.",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid leakExample() {\n    int* p = new int[1000];\n    // forgot delete[] p;\n    // When function exits, pointer p is destroyed, but the heap memory is lost.\n}\n\nint main() {\n    // This loop would cause massive leak if uncommented\n    // for (int i = 0; i < 100000; i++) {\n    //     leakExample();\n    // }\n    \n    // Correct way: always delete\n    int* data = new int(42);\n    cout << *data << endl;\n    delete data;   // no leak\n    data = nullptr;\n    \n    // Tools to detect leaks: Valgrind, AddressSanitizer, Visual Studio's debug heap\n    cout << \"No leak in this example\" << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "Dangling Pointers",
+      "definition": "After delete, the pointer still holds the address of freed memory. Dereferencing it is undefined behavior (crash, corruption).",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int* p = new int(5);\n    delete p;\n    \n    // p now dangling: points to freed memory\n    // *p = 10;  // VERY BAD: undefined behavior\n    \n    // Solution: set to nullptr after delete\n    p = nullptr;\n    \n    if (p != nullptr) {\n        *p = 10;  // safe now\n    } else {\n        cout << \"Pointer is null, can't dereference\" << endl;\n    }\n    \n    // Another danger: two pointers to same memory\n    int* q = new int(42);\n    int* r = q;  // both point to same\n    delete q;\n    // r is now dangling too!\n    r = nullptr; // need to set both\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Double Delete (Undefined Behavior)",
+      "definition": "Deleting the same memory twice causes undefined behavior (usually crash). Avoid by setting pointers to nullptr after delete.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int* p = new int(5);\n    delete p;\n    // delete p;  // ERROR: double delete, crashes\n    \n    // Safe pattern:\n    int* q = new int(10);\n    delete q;\n    q = nullptr;\n    delete q;  // safe: deleting nullptr does nothing\n    \n    cout << \"Double delete on nullptr is fine\" << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "Dynamic Allocation for 2D Arrays",
+      "definition": "Two common ways: array of pointers (each row separately) or a single flat array with manual index calculation.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int rows = 3, cols = 4;\n    \n    // Method 1: array of pointers (jagged possible)\n    int** matrix = new int*[rows];\n    for (int i = 0; i < rows; i++) {\n        matrix[i] = new int[cols];\n        for (int j = 0; j < cols; j++) {\n            matrix[i][j] = i * cols + j;\n        }\n    }\n    \n    // Print\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            cout << matrix[i][j] << \"\\t\";\n        }\n        cout << endl;\n    }\n    \n    // Deallocate (reverse order)\n    for (int i = 0; i < rows; i++) {\n        delete[] matrix[i];\n    }\n    delete[] matrix;\n    \n    // Method 2: flat array\n    int* flat = new int[rows * cols];\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            flat[i * cols + j] = i * cols + j;\n        }\n    }\n    \n    // Access flat[i][j] as flat[i*cols + j]\n    delete[] flat;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "new and delete vs malloc/free",
+      "definition": "C++ uses new/delete because they call constructors/destructors. malloc/free from C only allocate raw memory. Never mix them.",
+      "code": "#include <iostream>\n#include <cstdlib>\nusing namespace std;\n\nclass Test {\npublic:\n    Test() { cout << \"Constructor\" << endl; }\n    ~Test() { cout << \"Destructor\" << endl; }\n};\n\nint main() {\n    // C++ way\n    Test* t1 = new Test();   // calls constructor\n    delete t1;               // calls destructor\n    \n    // C way (don't do this in C++ for objects)\n    Test* t2 = (Test*)malloc(sizeof(Test)); // no constructor\n    // ... use t2 ...\n    free(t2);  // no destructor\n    \n    // For primitive types, both work, but new/delete is idiomatic C++\n    int* p = new int(5);\n    delete p;\n    \n    int* q = (int*)malloc(sizeof(int));\n    *q = 5;\n    free(q);\n    \n    return 0;\n}"
+    },
+    {
+      "title": "nothrow new",
+      "definition": "By default, new throws std::bad_alloc on failure. Use nothrow version to return nullptr instead.",
+      "code": "#include <iostream>\n#include <new>  // for nothrow\nusing namespace std;\n\nint main() {\n    // Normal new throws exception\n    try {\n        int* huge = new int[100000000000]; // might throw\n        delete[] huge;\n    } catch (const bad_alloc& e) {\n        cout << \"Exception: \" << e.what() << endl;\n    }\n    \n    // nothrow new returns nullptr on failure\n    int* p = new(nothrow) int[100000000000];\n    if (p == nullptr) {\n        cout << \"Allocation failed, returned nullptr\" << endl;\n    } else {\n        delete[] p;\n    }\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Placement new",
+      "definition": "Construct an object at a pre-allocated memory location. Used in custom memory management, pools, and embedded systems.",
+      "code": "#include <iostream>\n#include <new>  // placement new\nusing namespace std;\n\nclass Point {\npublic:\n    int x, y;\n    Point(int a, int b) : x(a), y(b) {\n        cout << \"Point constructed at \" << this << endl;\n    }\n    ~Point() { cout << \"Point destroyed\" << endl; }\n};\n\nint main() {\n    // Allocate raw memory (not initialized)\n    char* buffer = new char[sizeof(Point)];\n    \n    // Construct Point in that memory\n    Point* p = new(buffer) Point(10, 20);\n    \n    cout << \"Point values: \" << p->x << \", \" << p->y << endl;\n    \n    // Must call destructor explicitly (placement new requires explicit destructor)\n    p->~Point();\n    \n    // Delete raw memory\n    delete[] buffer;\n    \n    return 0;\n}"
+    }
+  ]
+}

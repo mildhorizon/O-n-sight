@@ -1,0 +1,41 @@
+{
+  "topic": "Binary Search Trees",
+  "description": "BST with insertion, deletion, and balanced trees like AVL and Red-Black.",
+  "sections": [
+    {
+      "title": "What is a BST?",
+      "definition": "Left subtree < root < right subtree.",
+      "code": "struct Node {\n    int data;\n    Node* left;\n    Node* right;\n    Node(int val) {\n        data = val;\n        left = right = NULL;\n    }\n};"
+    },
+    {
+      "title": "Insertion in BST",
+      "definition": "Insert recursively based on value.",
+      "code": "Node* insert(Node* root, int val) {\n    if(!root) return new Node(val);\n    if(val < root->data)\n        root->left = insert(root->left, val);\n    else\n        root->right = insert(root->right, val);\n    return root;\n}"
+    },
+    {
+      "title": "Search in BST",
+      "definition": "Search in O(h).",
+      "code": "bool search(Node* root, int key) {\n    if(!root) return false;\n    if(root->data == key) return true;\n    if(key < root->data)\n        return search(root->left, key);\n    return search(root->right, key);\n}"
+    },
+    {
+      "title": "Deletion in BST",
+      "definition": "Handle 0,1,2 children.",
+      "code": "Node* findMin(Node* root) {\n    while(root->left) root = root->left;\n    return root;\n}\n\nNode* deleteNode(Node* root, int key) {\n    if(!root) return NULL;\n    if(key < root->data)\n        root->left = deleteNode(root->left, key);\n    else if(key > root->data)\n        root->right = deleteNode(root->right, key);\n    else {\n        if(!root->left) return root->right;\n        if(!root->right) return root->left;\n        Node* temp = findMin(root->right);\n        root->data = temp->data;\n        root->right = deleteNode(root->right, temp->data);\n    }\n    return root;\n}"
+    },
+    {
+      "title": "AVL Tree (Self Balancing)",
+      "definition": "Maintains balance factor ≤ 1 using rotations.",
+      "code": "int height(Node* n);\nint getBalance(Node* n) {\n    if(!n) return 0;\n    return height(n->left) - height(n->right);\n}"
+    },
+    {
+      "title": "Red-Black Tree",
+      "definition": "Self-balancing BST with color properties ensuring O(log n).",
+      "code": "// Properties:\n// 1. Root is black\n// 2. Red nodes can't have red children\n// 3. Equal black height\n// Implementation involves rotations and recoloring"
+    },
+    {
+      "title": "Applications",
+      "definition": "Databases, sets/maps, indexing.",
+      "code": "// STL set/map uses Red-Black Tree"
+    }
+  ]
+}

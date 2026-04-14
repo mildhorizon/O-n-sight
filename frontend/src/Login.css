@@ -1,0 +1,130 @@
+.login-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* Cream paper base with a subtle JoJo motif (repeating menacing symbol) */
+  background-color: #fdfaf3;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      rgba(180, 160, 140, 0.06) 0px,
+      rgba(180, 160, 140, 0.06) 2px,
+      transparent 2px,
+      transparent 12px
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ctext x='30' y='40' font-family='Arial' font-size='24' fill='rgba(158, 59, 51, 0.06)' text-anchor='middle'%3Eゴ%3C/text%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: auto, 60px 60px, 200px;
+  background-position: 0 0, 0 0, 0 0;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Add a decorative "Joestar" birthmark and a "menacing" symbol */
+.login-wrapper::before {
+  content: "★";
+  font-size: 140px;
+  color: rgba(158, 59, 51, 0.06);
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transform: rotate(15deg);
+  font-family: serif;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.login-wrapper::after {
+  content: "ゴゴゴゴ";
+  font-size: 80px;
+  color: rgba(80, 60, 40, 0.05);
+  position: absolute;
+  bottom: 30px;
+  left: 40px;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  letter-spacing: 12px;
+  transform: rotate(-5deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Quote section */
+.jojo-quote {
+  margin-bottom: 24px;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--accent);
+  border-bottom: 1px dashed var(--glass-border);
+  padding-bottom: 18px;
+}
+
+.jojo-quote p {
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.jojo-quote .quote-author {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+/* Star birthmark image (floating) */
+.star-birthmark {
+  width: 48px;
+  height: 48px;
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Joestar_Birthmark.svg/400px-Joestar_Birthmark.svg.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.3;
+  position: absolute;
+  left: 25px;
+  top: 30px;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.login-glass {
+  background: rgba(253, 250, 243, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(80, 60, 40, 0.2) !important;
+  border-radius: 2px;
+  padding: 40px 50px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 12px 12px 0 rgba(80, 60, 40, 0.05) !important;
+  position: relative;
+  z-index: 10;
+}
+
+.login-input {
+  width: 100%;
+  padding: 15px;
+  background: #fdfaf3 !important;
+  border: 1px solid rgba(80, 60, 40, 0.25) !important;
+  color: #2c2416 !important;
+  border-radius: 2px;
+  outline: none;
+  font-family: 'Crimson Text', serif !important;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.login-input:focus {
+  border-color: #9e3b33 !important;
+  box-shadow: 0 0 0 3px rgba(158, 59, 51, 0.1) !important;
+}

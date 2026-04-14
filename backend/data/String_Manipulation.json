@@ -1,0 +1,56 @@
+{
+  "topic": "C++ String Manipulation",
+  "description": "Complete guide to strings in C++: C-style strings (char arrays) and std::string. Covers declaration, input/output, common functions, manipulation, conversion, and best practices.",
+  "sections": [
+    {
+      "title": "Introduction to Strings",
+      "definition": "A string is a sequence of characters. C++ has two types: C-style strings (char arrays null-terminated) and std::string (modern, safer).",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    // C-style string (char array)\n    char cstr[] = \"Hello\";  // actually {'H','e','l','l','o','\\0'}\n    \n    // C++ string\n    string str = \"Hello\";\n    \n    cout << cstr << endl;\n    cout << str << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "C-Style Strings (Character Arrays)",
+      "definition": "C-strings are char arrays terminated by null character '\\0'. Need to manage size manually. Functions in <cstring>.",
+      "code": "#include <iostream>\n#include <cstring>\nusing namespace std;\n\nint main() {\n    char str1[20] = \"Hello\";\n    char str2[] = \"World\";\n    char str3[10];\n    \n    // String length (excluding '\\0')\n    cout << \"Length of str1: \" << strlen(str1) << endl;\n    \n    // Copy\n    strcpy(str3, str1);\n    cout << \"str3: \" << str3 << endl;\n    \n    // Concatenate\n    strcat(str1, \" \");\n    strcat(str1, str2);\n    cout << \"Concatenated: \" << str1 << endl;\n    \n    // Compare\n    if (strcmp(str1, \"Hello World\") == 0) {\n        cout << \"Equal\" << endl;\n    }\n    \n    // Danger: buffer overflow if not enough space\n    char small[5];\n    // strcpy(small, \"Too long\"); // BAD: buffer overflow\n    strncpy(small, \"Too long\", 4);\n    small[4] = '\\0';\n    cout << \"Safe copy: \" << small << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "std::string Basics",
+      "definition": "std::string (from <string>) is the modern C++ way. Dynamic size, rich member functions, safe.",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    // Various ways to create\n    string s1;                     // empty\n    string s2 = \"Hello\";          // copy initialization\n    string s3(\"World\");           // direct initialization\n    string s4(5, 'A');            // \"AAAAA\"\n    string s5(s2);                // copy\n    string s6 = s2 + \" \" + s3;    // \"Hello World\"\n    \n    cout << s1 << endl;\n    cout << s2 << endl;\n    cout << s3 << endl;\n    cout << s4 << endl;\n    cout << s6 << endl;\n    \n    // Input with spaces\n    string fullName;\n    cout << \"Enter your full name: \";\n    getline(cin, fullName);   // reads entire line\n    cout << \"Hello, \" << fullName << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "std::string Access and Modification",
+      "definition": "Use [] or at() to access characters. at() does bounds checking. Modify with assignment, append, insert, replace.",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string str = \"Hello\";\n    \n    // Access\n    cout << \"First char: \" << str[0] << endl;\n    cout << \"Last char: \" << str.back() << endl;\n    cout << \"Using at(): \" << str.at(1) << endl;\n    \n    // Modify\n    str[0] = 'h';\n    str.back() = 'o';\n    cout << str << endl;  // \"hello\"\n    \n    // Append\n    str.append(\" world\");      // \"hello world\"\n    str += \"!\";                // \"hello world!\"\n    cout << str << endl;\n    \n    // Insert\n    str.insert(5, \" big\");     // \"hello big world!\"\n    cout << str << endl;\n    \n    // Replace\n    str.replace(6, 3, \"small\"); // \"hello small world!\"\n    cout << str << endl;\n    \n    // Erase\n    str.erase(5, 6);           // remove \" small\"\n    cout << str << endl;       // \"hello world!\"\n    \n    return 0;\n}"
+    },
+    {
+      "title": "std::string Size and Capacity",
+      "definition": "size()/length() return number of characters. capacity() is allocated memory. resize() changes size.",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string s = \"Hello\";\n    cout << \"Size: \" << s.size() << endl;\n    cout << \"Length: \" << s.length() << endl;  // same\n    cout << \"Capacity: \" << s.capacity() << endl;\n    \n    s.resize(10, '!');\n    cout << \"After resize: \" << s << endl;     // \"Hello!!!!!\"\n    cout << \"New size: \" << s.size() << endl;\n    \n    s.reserve(100);  // preallocate capacity\n    cout << \"Capacity after reserve: \" << s.capacity() << endl;\n    \n    s.shrink_to_fit();  // C++11, reduce capacity to fit size\n    \n    // Check empty\n    string empty;\n    if (empty.empty()) cout << \"String is empty\" << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Searching and Substrings",
+      "definition": "find() returns index of first occurrence, rfind() from end. substr() extracts portion.",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string str = \"The quick brown fox jumps over the lazy dog\";\n    \n    // Find first occurrence\n    size_t pos = str.find(\"fox\");\n    if (pos != string::npos) {\n        cout << \"'fox' found at index \" << pos << endl;\n    }\n    \n    // Find from position\n    pos = str.find(\"the\", 10);  // find 'the' after index 10\n    cout << \"'the' found at \" << pos << endl;\n    \n    // Find last occurrence\n    pos = str.rfind(\"the\");\n    cout << \"Last 'the' at \" << pos << endl;\n    \n    // Find first of any characters\n    pos = str.find_first_of(\"aeiou\");\n    cout << \"First vowel at index \" << pos << \" -> \" << str[pos] << endl;\n    \n    // Substring\n    string sub = str.substr(10, 5);  // starting at 10, length 5\n    cout << \"Substring: \" << sub << endl;  // \"brown\"\n    \n    // Substring to end\n    string end = str.substr(40);\n    cout << \"From 40: \" << end << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Comparison and Conversion",
+      "definition": "Strings can be compared with ==, !=, <, >. Conversion between string and numbers.",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string s1 = \"apple\";\n    string s2 = \"banana\";\n    \n    if (s1 < s2) cout << \"apple comes before banana\" << endl;\n    \n    string s3 = \"Hello\";\n    string s4 = \"Hello\";\n    if (s3 == s4) cout << \"Equal\" << endl;\n    \n    // Compare with C-string\n    if (s3 == \"Hello\") cout << \"Equal to literal\" << endl;\n    \n    // String to number (C++11)\n    string numStr = \"123\";\n    int num = stoi(numStr);\n    double dnum = stod(\"3.14159\");\n    long lnum = stol(\"1000000\");\n    cout << \"Integer: \" << num << \", Double: \" << dnum << endl;\n    \n    // Number to string\n    string strNum = to_string(456);\n    string strPi = to_string(3.14159);\n    cout << \"String from int: \" << strNum << endl;\n    \n    // Check if string is numeric\n    string input = \"123abc\";\n    try {\n        int val = stoi(input);\n        cout << \"Converted: \" << val << endl;  // stops at first non-digit? Actually stoi stops at 'a'\n    } catch (...) {\n        cout << \"Conversion failed\" << endl;\n    }\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Iterating Over Strings",
+      "definition": "Range-based for loop, iterators, or index loop.",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string str = \"Hello\";\n    \n    // Index loop\n    for (size_t i = 0; i < str.size(); i++) {\n        cout << str[i] << \" \";\n    }\n    cout << endl;\n    \n    // Range-based for (C++11)\n    for (char c : str) {\n        cout << c << \" \";\n    }\n    cout << endl;\n    \n    // Iterator\n    for (auto it = str.begin(); it != str.end(); ++it) {\n        cout << *it << \" \";\n    }\n    cout << endl;\n    \n    // Reverse iterator\n    for (auto rit = str.rbegin(); rit != str.rend(); ++rit) {\n        cout << *rit << \" \";\n    }\n    cout << endl;\n    \n    // Modify in loop (reference)\n    for (char& c : str) {\n        c = toupper(c);\n    }\n    cout << str << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Common String Algorithms",
+      "definition": "Reverse, palindrome check, count characters, tokenization.",
+      "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n#include <sstream>\nusing namespace std;\n\nint main() {\n    // Reverse\n    string s = \"Hello World\";\n    reverse(s.begin(), s.end());\n    cout << \"Reversed: \" << s << endl;\n    \n    // Palindrome check\n    string word = \"radar\";\n    string rev = word;\n    reverse(rev.begin(), rev.end());\n    if (word == rev) cout << word << \" is palindrome\" << endl;\n    \n    // Count characters\n    string text = \"hello hello\";\n    int count_l = count(text.begin(), text.end(), 'l');\n    cout << \"Number of 'l': \" << count_l << endl;\n    \n    // Convert case\n    string upper = text;\n    transform(upper.begin(), upper.end(), upper.begin(), ::toupper);\n    cout << \"Uppercase: \" << upper << endl;\n    \n    // Tokenization (split by space)\n    string sentence = \"C++ is fun\";\n    stringstream ss(sentence);\n    string token;\n    cout << \"Tokens: \";\n    while (ss >> token) {\n        cout << token << \" | \";\n    }\n    cout << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "C-Style vs std::string Conversion",
+      "definition": "Convert between C-strings and std::string using c_str() and string constructor.",
+      "code": "#include <iostream>\n#include <string>\n#include <cstring>\nusing namespace std;\n\nint main() {\n    // std::string to C-string\n    string cppStr = \"Hello\";\n    const char* cstr = cppStr.c_str();   // pointer to internal null-terminated array\n    cout << \"C-string: \" << cstr << endl;\n    \n    // Copy to mutable char array\n    char buffer[20];\n    strcpy(buffer, cppStr.c_str());\n    buffer[0] = 'h';\n    cout << \"Buffer: \" << buffer << endl;\n    \n    // C-string to std::string\n    const char* old = \"World\";\n    string newStr(old);   // or string newStr = old;\n    cout << \"std::string: \" << newStr << endl;\n    \n    // Function that expects C-string\n    void legacyFunc(const char* s) { cout << \"Legacy: \" << s << endl; }\n    legacyFunc(cppStr.c_str());\n    \n    return 0;\n}"
+    }
+  ]
+}

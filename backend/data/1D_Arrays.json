@@ -1,0 +1,57 @@
+{
+  "topic": "C++ Arrays - Introduction and 1D Arrays",
+  "description": "Complete guide to arrays in C++: what are arrays, declaration, initialization, accessing elements, array size, passing to functions, and dynamic arrays. Many examples.",
+  "sections": [
+    {
+      "title": "What is an Array?",
+      "definition": "An array is a collection of elements of the same data type stored in contiguous memory locations. It allows storing multiple values under a single variable name.",
+      "analogy": "Think of a parking lot with numbered spots. The lot is the array, each spot is an element, and the spot number is the index.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int scores[5] = {90, 85, 78, 92, 88};\n    // scores[0]=90, scores[1]=85, ... scores[4]=88\n    for (int i = 0; i < 5; i++) {\n        cout << \"Student \" << i+1 << \": \" << scores[i] << endl;\n    }\n    return 0;\n}"
+    },
+    {
+      "title": "Declaring 1D Arrays",
+      "definition": "Syntax: type arrayName[size]; size must be a constant expression (compile-time known) for static arrays.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Declaration only (contains garbage values)\n    int numbers[10];\n    \n    // Declaration with initialization\n    int marks[5] = {95, 87, 76, 89, 91};\n    \n    // Partial initialization (remaining set to 0)\n    int partial[5] = {10, 20};  // {10, 20, 0, 0, 0}\n    \n    // Size deduced from initializer\n    int autoSize[] = {1, 2, 3, 4, 5};  // size = 5\n    \n    // Initialize all to zero\n    int zero[100] = {0};\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Accessing Array Elements",
+      "definition": "Use index (0-based) inside square brackets []. Access for reading or writing. Out-of-bounds access causes undefined behavior.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[5] = {10, 20, 30, 40, 50};\n    \n    // Reading\n    cout << \"First element: \" << arr[0] << endl;\n    cout << \"Third element: \" << arr[2] << endl;\n    \n    // Writing\n    arr[1] = 99;\n    arr[4] = arr[0] + arr[2];\n    \n    // Loop through\n    for (int i = 0; i < 5; i++) {\n        cout << arr[i] << \" \";\n    }\n    cout << endl;\n    \n    // arr[5] = 60; // BAD: index 5 out of bounds (size is 5, valid 0-4)\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Array Size and sizeof",
+      "definition": "sizeof(array) returns total bytes. Divide by sizeof(element) to get number of elements. Useful for loops.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int numbers[] = {10, 20, 30, 40, 50, 60};\n    \n    int totalBytes = sizeof(numbers);\n    int elementBytes = sizeof(numbers[0]);\n    int elementCount = sizeof(numbers) / sizeof(numbers[0]);\n    \n    cout << \"Total bytes: \" << totalBytes << endl;\n    cout << \"Bytes per element: \" << elementBytes << endl;\n    cout << \"Number of elements: \" << elementCount << endl;\n    \n    // Safe loop\n    for (int i = 0; i < elementCount; i++) {\n        cout << numbers[i] << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Array and Pointer Relationship",
+      "definition": "Array name decays to pointer to first element. arr is same as &arr[0]. Pointer arithmetic works with arrays.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[] = {5, 10, 15, 20};\n    int* ptr = arr;  // points to arr[0]\n    \n    cout << \"arr[0] = \" << arr[0] << \", *ptr = \" << *ptr << endl;\n    cout << \"arr[1] = \" << arr[1] << \", *(ptr+1) = \" << *(ptr+1) << endl;\n    \n    // Array indexing is pointer arithmetic\n    cout << \"2[arr] = \" << 2[arr] << endl;  // same as arr[2]\n    \n    // Important: sizeof(arr) gives array size, sizeof(ptr) gives pointer size\n    cout << \"sizeof(arr): \" << sizeof(arr) << endl;\n    cout << \"sizeof(ptr): \" << sizeof(ptr) << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Passing Arrays to Functions",
+      "definition": "When passed to function, array decays to pointer. Need to pass size separately. Modifications affect original.",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Array parameter decays to pointer\nvoid printArray(int arr[], int size) {\n    for (int i = 0; i < size; i++) {\n        cout << arr[i] << \" \";\n    }\n    cout << endl;\n}\n\nvoid doubleElements(int* arr, int size) {  // int* is same as int[]\n    for (int i = 0; i < size; i++) {\n        arr[i] *= 2;\n    }\n}\n\n// Return size via reference\nvoid fillArray(int arr[], int size, int& filledCount) {\n    for (int i = 0; i < size && i < 5; i++) {\n        arr[i] = i * 10;\n        filledCount++;\n    }\n}\n\nint main() {\n    int data[] = {1, 2, 3, 4, 5};\n    int size = sizeof(data)/sizeof(data[0]);\n    \n    printArray(data, size);\n    doubleElements(data, size);\n    printArray(data, size);  // doubled\n    \n    int arr2[10];\n    int count = 0;\n    fillArray(arr2, 10, count);\n    cout << \"Filled \" << count << \" elements\" << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Multidimensional Arrays (brief intro)",
+      "definition": "Arrays can have multiple dimensions. 2D arrays are arrays of arrays. Covered in detail in next module.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int matrix[2][3] = {{1,2,3}, {4,5,6}};\n    cout << matrix[0][1] << endl; // 2\n    return 0;\n}"
+    },
+    {
+      "title": "Dynamic Arrays (Heap Allocation)",
+      "definition": "For arrays with size known at runtime, use dynamic allocation with new[] and delete[].",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cout << \"Enter array size: \";\n    cin >> n;\n    \n    // Dynamic allocation\n    int* arr = new int[n];\n    \n    // Initialize\n    for (int i = 0; i < n; i++) {\n        arr[i] = i * 10;\n    }\n    \n    // Use\n    for (int i = 0; i < n; i++) {\n        cout << arr[i] << \" \";\n    }\n    cout << endl;\n    \n    // Free memory\n    delete[] arr;\n    arr = nullptr;\n    \n    // Better: use std::vector for dynamic arrays (modern C++)\n    // #include <vector>\n    // vector<int> vec(n);\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Array of Objects",
+      "definition": "Arrays can store objects of any type. Constructor called for each element if initializer provided.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Point {\npublic:\n    int x, y;\n    Point(int a = 0, int b = 0) : x(a), y(b) {\n        cout << \"Point(\" << x << \",\" << y << \") created\" << endl;\n    }\n    void display() { cout << \"(\" << x << \",\" << y << \")\" << endl; }\n};\n\nint main() {\n    Point points[3] = {{1,2}, {3,4}, {5,6}};\n    for (int i = 0; i < 3; i++) {\n        points[i].display();\n    }\n    \n    // Dynamic array of objects\n    Point* pArray = new Point[2]{{10,20}, {30,40}};\n    pArray[0].display();\n    delete[] pArray;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Common Pitfalls",
+      "definition": "Out-of-bounds, array decay confusion, forgetting to delete dynamic arrays, using sizeof on pointer.",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid badFunction(int arr[]) {\n    // sizeof(arr) is pointer size, NOT array size!\n    cout << \"Inside function, sizeof(arr) = \" << sizeof(arr) << \" bytes\" << endl;\n}\n\nint main() {\n    int arr[10];\n    cout << \"In main, sizeof(arr) = \" << sizeof(arr) << \" bytes\" << endl;\n    badFunction(arr);\n    \n    // Off-by-one error\n    int scores[5];\n    // for (int i = 0; i <= 5; i++) // BAD: i goes to 5, out of bounds\n    //    scores[i] = 0;\n    \n    // Correct:\n    for (int i = 0; i < 5; i++) scores[i] = 0;\n    \n    return 0;\n}"
+    }
+  ]
+}

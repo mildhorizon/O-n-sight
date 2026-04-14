@@ -1,0 +1,32 @@
+{
+  "topic": "Graph Fundamentals",
+  "description": "Introduction to graphs including representation and traversal algorithms like BFS and DFS.",
+  "sections": [
+    {
+      "title": "What is a Graph?",
+      "definition": "A graph is a collection of nodes (vertices) connected by edges.",
+      "analogy": "Like cities connected by roads.",
+      "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int V = 5;\n    vector<int> adj[V];\n    adj[0].push_back(1);\n    adj[1].push_back(0);\n}"
+    },
+    {
+      "title": "Adjacency Matrix",
+      "definition": "2D matrix to represent edges.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int V = 3;\n    int adj[3][3] = {0};\n    adj[0][1] = 1;\n    adj[1][2] = 1;\n}"
+    },
+    {
+      "title": "Adjacency List",
+      "definition": "Efficient representation using vectors.",
+      "code": "#include <vector>\nusing namespace std;\n\nvector<int> adj[5];\n\nvoid addEdge(int u, int v) {\n    adj[u].push_back(v);\n    adj[v].push_back(u);\n}"
+    },
+    {
+      "title": "BFS Traversal",
+      "definition": "Level order traversal using queue.",
+      "code": "#include <iostream>\n#include <queue>\n#include <vector>\nusing namespace std;\n\nvoid bfs(int start, vector<int> adj[], int V) {\n    vector<bool> visited(V, false);\n    queue<int> q;\n    q.push(start);\n    visited[start] = true;\n\n    while(!q.empty()) {\n        int node = q.front(); q.pop();\n        cout << node << \" \";\n        for(int neigh : adj[node]) {\n            if(!visited[neigh]) {\n                visited[neigh] = true;\n                q.push(neigh);\n            }\n        }\n    }\n}"
+    },
+    {
+      "title": "DFS Traversal",
+      "definition": "Depth-first traversal using recursion.",
+      "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nvoid dfs(int node, vector<int> adj[], vector<bool>& visited) {\n    visited[node] = true;\n    cout << node << \" \";\n    for(int neigh : adj[node]) {\n        if(!visited[neigh])\n            dfs(neigh, adj, visited);\n    }\n}"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "topic": "Four Pillars of OOP in C++",
+  "description": "Comprehensive coverage of Encapsulation, Inheritance, Polymorphism, and Abstraction. Each concept explained patiently with many code examples.",
+  "sections": [
+    {
+      "title": "Encapsulation",
+      "definition": "Bundling data and methods together, hiding internal state using private/protected access specifiers. Exposes only necessary public interface.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass BankAccount {\nprivate:\n    double balance;   // hidden\n    string password;\n    \n    bool authenticate(string pwd) {\n        return pwd == password;\n    }\n    \npublic:\n    BankAccount(string pwd) : balance(0), password(pwd) {}\n    \n    void deposit(double amount) {\n        if (amount > 0) balance += amount;\n    }\n    \n    bool withdraw(double amount, string pwd) {\n        if (authenticate(pwd) && amount <= balance) {\n            balance -= amount;\n            return true;\n        }\n        return false;\n    }\n    \n    double getBalance(string pwd) {\n        return authenticate(pwd) ? balance : -1;\n    }\n};\n\nint main() {\n    BankAccount acc(\"secret123\");\n    acc.deposit(1000);\n    if (acc.withdraw(500, \"secret123\"))\n        cout << \"Withdrawn 500\" << endl;\n    cout << \"Balance: \" << acc.getBalance(\"secret123\") << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "Inheritance – Basics",
+      "definition": "Derived class inherits members from base class. Promotes code reuse. Syntax: class Derived : access-specifier Base",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Animal {\npublic:\n    string name;\n    void eat() {\n        cout << name << \" is eating\" << endl;\n    }\n};\n\nclass Dog : public Animal {  // Dog inherits Animal\npublic:\n    void bark() {\n        cout << name << \" says Woof!\" << endl;\n    }\n};\n\nint main() {\n    Dog d;\n    d.name = \"Buddy\";\n    d.eat();   // inherited\n    d.bark();  // own\n    return 0;\n}"
+    },
+    {
+      "title": "Types of Inheritance",
+      "definition": "Single, Multiple, Multilevel, Hierarchical, Hybrid. Each has different structures.",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Single inheritance: one base, one derived\nclass A { public: void a() { cout << \"A\"; } };\nclass B : public A { public: void b() { cout << \"B\"; } };\n\n// Multiple inheritance: derived from multiple bases\nclass X { public: void x() { cout << \"X\"; } };\nclass Y { public: void y() { cout << \"Y\"; } };\nclass Z : public X, public Y { public: void z() { cout << \"Z\"; } };\n\n// Multilevel: A -> B -> C\nclass Base { public: void base() { cout << \"Base\"; } };\nclass Intermediate : public Base { public: void inter() { cout << \"Inter\"; } };\nclass Derived : public Intermediate { public: void derived() { cout << \"Derived\"; } };\n\n// Hierarchical: multiple derived from one base\nclass Shape { public: virtual void draw() = 0; };\nclass Circle : public Shape { void draw() override { cout << \"Circle\"; } };\nclass Square : public Shape { void draw() override { cout << \"Square\"; } };\n\nint main() {\n    B b; b.a(); b.b(); cout << endl;\n    Z z; z.x(); z.y(); z.z(); cout << endl;\n    Derived d; d.base(); d.inter(); d.derived(); cout << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "Access Specifiers in Inheritance",
+      "definition": "public inheritance: public stays public, protected stays protected. protected: public becomes protected. private: all become private.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Base {\npublic:\n    int pub = 1;\nprotected:\n    int prot = 2;\nprivate:\n    int priv = 3;\n};\n\n// public inheritance\nclass PubDerived : public Base {\n    // pub remains public, prot remains protected, priv inaccessible\n    void func() {\n        cout << pub << \" \" << prot << endl; // priv not accessible\n    }\n};\n\n// protected inheritance\nclass ProtDerived : protected Base {\n    // pub and prot become protected\n};\n\n// private inheritance\nclass PrivDerived : private Base {\n    // pub and prot become private\n};\n\nint main() {\n    PubDerived pd;\n    cout << pd.pub << endl;  // OK, public\n    // cout << pd.prot; // ERROR: protected\n    return 0;\n}"
+    },
+    {
+      "title": "Constructor and Destructor in Inheritance",
+      "definition": "Base constructor called first, then derived. Destructor order: derived first, then base.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Base {\npublic:\n    Base() { cout << \"Base constructor\" << endl; }\n    ~Base() { cout << \"Base destructor\" << endl; }\n};\n\nclass Derived : public Base {\npublic:\n    Derived() { cout << \"Derived constructor\" << endl; }\n    ~Derived() { cout << \"Derived destructor\" << endl; }\n};\n\nint main() {\n    Derived d;\n    return 0;\n}",
+      "output": "Base constructor\nDerived constructor\nDerived destructor\nBase destructor"
+    },
+    {
+      "title": "Polymorphism – Compile-time (Function Overloading)",
+      "definition": "Polymorphism means 'many forms'. Compile-time polymorphism includes function overloading and operator overloading.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Math {\npublic:\n    int add(int a, int b) { return a + b; }\n    double add(double a, double b) { return a + b; }\n    int add(int a, int b, int c) { return a + b + c; }\n};\n\nint main() {\n    Math m;\n    cout << m.add(2, 3) << endl;\n    cout << m.add(2.5, 3.7) << endl;\n    cout << m.add(1, 2, 3) << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "Polymorphism – Runtime (Virtual Functions)",
+      "definition": "Runtime polymorphism uses virtual functions. Base class pointer/reference can call derived class overrides. Requires virtual keyword.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass Animal {\npublic:\n    virtual void speak() {   // virtual allows override\n        cout << \"Animal sound\" << endl;\n    }\n    virtual ~Animal() {}     // virtual destructor\n};\n\nclass Dog : public Animal {\npublic:\n    void speak() override {  // override keyword optional but good\n        cout << \"Woof!\" << endl;\n    }\n};\n\nclass Cat : public Animal {\npublic:\n    void speak() override {\n        cout << \"Meow!\" << endl;\n    }\n};\n\nint main() {\n    Animal* ptr;\n    Dog d;\n    Cat c;\n    \n    ptr = &d;\n    ptr->speak();   // Woof!\n    ptr = &c;\n    ptr->speak();   // Meow!\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Abstraction",
+      "definition": "Hiding implementation details and showing only essential features. Achieved via abstract classes (with pure virtual functions) or interfaces.",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Abstract class (has pure virtual function)\nclass Shape {\npublic:\n    virtual double area() = 0;  // pure virtual\n    virtual void display() {\n        cout << \"Area: \" << area() << endl;\n    }\n    virtual ~Shape() {}\n};\n\nclass Rectangle : public Shape {\nprivate:\n    double w, h;\npublic:\n    Rectangle(double width, double height) : w(width), h(height) {}\n    double area() override {\n        return w * h;\n    }\n};\n\nclass Circle : public Shape {\nprivate:\n    double r;\npublic:\n    Circle(double radius) : r(radius) {}\n    double area() override {\n        return 3.14159 * r * r;\n    }\n};\n\nint main() {\n    // Shape s; // ERROR: abstract class cannot be instantiated\n    Shape* shapes[] = {new Rectangle(5, 10), new Circle(7)};\n    for (auto s : shapes) {\n        s->display();\n        delete s;\n    }\n    return 0;\n}"
+    }
+  ]
+}

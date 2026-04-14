@@ -1,0 +1,52 @@
+{
+  "topic": "Doubly Linked List",
+  "description": "Complete guide to doubly linked lists: node structure with prev pointer, insertion (beginning, end, position), deletion, traversal forward/backward, and advantages over singly linked lists.",
+  "sections": [
+    {
+      "title": "What is a Doubly Linked List?",
+      "definition": "A doubly linked list has nodes with two pointers: next (to next node) and prev (to previous node). Allows traversal in both directions.",
+      "analogy": "A two-way street: you can move forward to the next house or backward to the previous one.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* prev;\n    Node* next;\n    Node(int val) : data(val), prev(nullptr), next(nullptr) {}\n};\n\nint main() {\n    Node* head = new Node(10);\n    Node* second = new Node(20);\n    Node* third = new Node(30);\n    head->next = second;\n    second->prev = head;\n    second->next = third;\n    third->prev = second;\n    // Traverse forward\n    for (Node* p = head; p; p = p->next) cout << p->data << \" \";\n    cout << endl;\n    // Traverse backward\n    for (Node* p = third; p; p = p->prev) cout << p->data << \" \";\n    return 0;\n}"
+    },
+    {
+      "title": "Node Structure and Helper Functions",
+      "definition": "Each node stores data, prev, and next. Provide functions to insert at front/back and print.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* prev;\n    Node* next;\n    Node(int d) : data(d), prev(nullptr), next(nullptr) {}\n};\n\nvoid printForward(Node* head) {\n    for (Node* p = head; p; p = p->next)\n        cout << p->data << \" \";\n    cout << endl;\n}\n\nvoid printBackward(Node* tail) {\n    for (Node* p = tail; p; p = p->prev)\n        cout << p->data << \" \";\n    cout << endl;\n}\n\nint main() {\n    Node* head = nullptr;\n    // ... operations\n    return 0;\n}"
+    },
+    {
+      "title": "Insertion at Beginning",
+      "definition": "Create new node, set its next to head, update head's prev if head exists, then set head to new node. O(1).",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* prev;\n    Node* next;\n    Node(int d) : data(d), prev(nullptr), next(nullptr) {}\n};\n\nvoid insertFront(Node*& head, int val) {\n    Node* newNode = new Node(val);\n    if (head) {\n        newNode->next = head;\n        head->prev = newNode;\n    }\n    head = newNode;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertFront(head, 30);\n    insertFront(head, 20);\n    insertFront(head, 10);\n    printForward(head); // 10 20 30\n    return 0;\n}"
+    },
+    {
+      "title": "Insertion at End",
+      "definition": "Traverse to last node, then attach new node. Update prev of new node and next of last node. O(n).",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid insertEnd(Node*& head, int val) {\n    Node* newNode = new Node(val);\n    if (!head) {\n        head = newNode;\n        return;\n    }\n    Node* curr = head;\n    while (curr->next) curr = curr->next;\n    curr->next = newNode;\n    newNode->prev = curr;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertEnd(head, 10);\n    insertEnd(head, 20);\n    insertEnd(head, 30);\n    printForward(head); // 10 20 30\n    return 0;\n}"
+    },
+    {
+      "title": "Insertion at a Given Position",
+      "definition": "Handle beginning (pos 0) and middle. Maintain both prev and next links. O(n).",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid insertAtPosition(Node*& head, int val, int pos) {\n    if (pos < 0) return;\n    if (pos == 0) { insertFront(head, val); return; }\n    Node* curr = head;\n    for (int i = 0; i < pos && curr; i++) curr = curr->next;\n    if (!curr) return; // position beyond list\n    Node* newNode = new Node(val);\n    newNode->prev = curr->prev;\n    newNode->next = curr;\n    if (curr->prev) curr->prev->next = newNode;\n    curr->prev = newNode;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertEnd(head, 10); insertEnd(head, 30);\n    insertAtPosition(head, 20, 1); // 10 20 30\n    printForward(head);\n    return 0;\n}"
+    },
+    {
+      "title": "Deletion of a Node",
+      "definition": "Given a pointer to node, adjust prev and next of neighbors, then delete. O(1) if node known. Delete by value: O(n) to find.",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid deleteNode(Node*& head, Node* del) {\n    if (!head || !del) return;\n    if (head == del) head = del->next;\n    if (del->prev) del->prev->next = del->next;\n    if (del->next) del->next->prev = del->prev;\n    delete del;\n}\n\nvoid deleteByValue(Node*& head, int val) {\n    Node* curr = head;\n    while (curr && curr->data != val) curr = curr->next;\n    if (curr) deleteNode(head, curr);\n}\n\nint main() {\n    Node* head = nullptr;\n    insertEnd(head, 10); insertEnd(head, 20); insertEnd(head, 30);\n    deleteByValue(head, 20);\n    printForward(head); // 10 30\n    return 0;\n}"
+    },
+    {
+      "title": "Reversing a Doubly Linked List",
+      "definition": "Swap next and prev pointers for each node, and update head to last node. O(n).",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid reverse(Node*& head) {\n    Node* curr = head;\n    Node* temp = nullptr;\n    while (curr) {\n        temp = curr->prev;\n        curr->prev = curr->next;\n        curr->next = temp;\n        curr = curr->prev; // move to original next\n    }\n    if (temp) head = temp->prev; // update head\n}\n\nint main() {\n    Node* head = nullptr;\n    insertEnd(head, 1); insertEnd(head, 2); insertEnd(head, 3);\n    reverse(head);\n    printForward(head); // 3 2 1\n    return 0;\n}"
+    },
+    {
+      "title": "Advantages over Singly Linked List",
+      "definition": "Can traverse backwards, easier deletion of a given node (without traversing from head), but uses extra memory for prev pointer.",
+      "code": "#include <iostream>\nusing namespace std;\n\n// Example: delete a node when only given pointer to that node (O(1))\nvoid deleteGivenNode(Node* del) {\n    if (!del) return;\n    if (del->prev) del->prev->next = del->next;\n    if (del->next) del->next->prev = del->prev;\n    delete del;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertEnd(head, 1); insertEnd(head, 2); insertEnd(head, 3);\n    Node* toDelete = head->next; // points to 2\n    deleteGivenNode(toDelete);   // O(1) deletion\n    printForward(head); // 1 3\n    return 0;\n}"
+    },
+    {
+      "title": "Doubly Linked List as Deque",
+      "definition": "Doubly linked list allows O(1) insertion/deletion at both ends, making it suitable for deque (double-ended queue).",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct DequeNode {\n    int data;\n    DequeNode* prev;\n    DequeNode* next;\n    DequeNode(int d) : data(d), prev(nullptr), next(nullptr) {}\n};\n\nclass Deque {\n    DequeNode* front;\n    DequeNode* rear;\npublic:\n    Deque() : front(nullptr), rear(nullptr) {}\n    void pushFront(int val) {\n        DequeNode* newNode = new DequeNode(val);\n        if (!front) front = rear = newNode;\n        else {\n            newNode->next = front;\n            front->prev = newNode;\n            front = newNode;\n        }\n    }\n    void pushBack(int val) {\n        DequeNode* newNode = new DequeNode(val);\n        if (!rear) front = rear = newNode;\n        else {\n            rear->next = newNode;\n            newNode->prev = rear;\n            rear = newNode;\n        }\n    }\n    void popFront() { /* ... */ }\n    void popBack()  { /* ... */ }\n};\n\nint main() {\n    Deque dq;\n    dq.pushFront(10); dq.pushBack(20);\n    return 0;\n}"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "topic": "Advanced Queues",
+  "description": "Advanced queue structures and implementations.",
+  "sections": [
+    {
+      "title": "Deque Implementation",
+      "definition": "Insert/delete from both ends.",
+      "code": "#include <deque>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    deque<int> dq;\n    dq.push_front(10);\n    dq.push_back(20);\n    cout << dq.front() << \" \" << dq.back();\n}"
+    },
+    {
+      "title": "Priority Queue (Heap)",
+      "definition": "Max heap implementation.",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid insert(int heap[], int &n, int val) {\n    n++;\n    heap[n] = val;\n    int i = n;\n    while(i > 1 && heap[i/2] < heap[i]) {\n        swap(heap[i], heap[i/2]);\n        i /= 2;\n    }\n}"
+    },
+    {
+      "title": "Monotonic Queue (Sliding Window Max)",
+      "definition": "Maintains decreasing order.",
+      "code": "#include <deque>\n#include <vector>\n#include <iostream>\nusing namespace std;\n\nvector<int> maxSlidingWindow(vector<int>& nums, int k) {\n    deque<int> dq;\n    vector<int> res;\n    for(int i=0;i<nums.size();i++) {\n        while(!dq.empty() && dq.front() <= i-k) dq.pop_front();\n        while(!dq.empty() && nums[dq.back()] < nums[i]) dq.pop_back();\n        dq.push_back(i);\n        if(i >= k-1) res.push_back(nums[dq.front()]);\n    }\n    return res;\n}"
+    },
+    {
+      "title": "K Queues in One Array",
+      "definition": "Multiple queues using one array.",
+      "code": "#include <iostream>\nusing namespace std;\n\nclass KQueue {\n    int arr[100], front[10], rear[10];\npublic:\n    KQueue() {\n        for(int i=0;i<10;i++) front[i]=rear[i]=-1;\n    }\n    void enqueue(int qn, int val) {\n        if(front[qn]==-1) front[qn]=rear[qn]=0;\n        else rear[qn]++;\n        arr[rear[qn]] = val;\n    }\n};"
+    },
+    {
+      "title": "Dijkstra using Priority Queue",
+      "definition": "Shortest path using PQ.",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nvoid dijkstra(int V, vector<pair<int,int>> adj[], int src) {\n    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq;\n    vector<int> dist(V, INT_MAX);\n    dist[src] = 0;\n    pq.push({0, src});\n\n    while(!pq.empty()) {\n        auto [d,u] = pq.top(); pq.pop();\n        for(auto [v,w]: adj[u]) {\n            if(dist[v] > d + w) {\n                dist[v] = d + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n}"
+    }
+  ]
+}

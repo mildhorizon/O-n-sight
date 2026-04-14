@@ -1,0 +1,82 @@
+{
+  "topic": "C++ Control Flow",
+  "description": "Complete guide to controlling program flow: conditionals (if/else, switch), loops (for, while, do-while, range-based), jump statements (break, continue, goto), and nested structures. Many examples.",
+  "sections": [
+    {
+      "title": "if Statement",
+      "definition": "Executes a block only if a condition is true.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int age = 18;\n    \n    if (age >= 18) {\n        cout << \"You are an adult.\" << endl;\n    }\n    \n    // Single statement can omit braces (not recommended for clarity)\n    if (age > 0)\n        cout << \"Valid age\" << endl;\n    \n    return 0;\n}",
+      "output": "You are an adult.\nValid age"
+    },
+    {
+      "title": "if-else Statement",
+      "definition": "Executes one block if condition is true, another if false.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int number = 7;\n    \n    if (number % 2 == 0) {\n        cout << number << \" is even\" << endl;\n    } else {\n        cout << number << \" is odd\" << endl;\n    }\n    \n    // Multiple examples\n    int score = 85;\n    if (score >= 50) {\n        cout << \"Pass\" << endl;\n    } else {\n        cout << \"Fail\" << endl;\n    }\n    \n    return 0;\n}",
+      "output": "7 is odd\nPass"
+    },
+    {
+      "title": "if-else if-else Ladder",
+      "definition": "Tests multiple conditions in order. The first true condition's block executes.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int marks = 85;\n    \n    if (marks >= 90) {\n        cout << \"Grade A\" << endl;\n    } else if (marks >= 75) {\n        cout << \"Grade B\" << endl;\n    } else if (marks >= 60) {\n        cout << \"Grade C\" << endl;\n    } else if (marks >= 40) {\n        cout << \"Grade D\" << endl;\n    } else {\n        cout << \"Fail\" << endl;\n    }\n    \n    // Another example: temperature\n    int temp = 30;\n    if (temp > 35) {\n        cout << \"Hot\" << endl;\n    } else if (temp > 20) {\n        cout << \"Warm\" << endl;\n    } else if (temp > 10) {\n        cout << \"Cool\" << endl;\n    } else {\n        cout << \"Cold\" << endl;\n    }\n    \n    return 0;\n}",
+      "output": "Grade B\nWarm"
+    },
+    {
+      "title": "Nested if Statements",
+      "definition": "if statements inside other if statements. Used for complex conditions.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int age = 25;\n    bool hasLicense = true;\n    \n    if (age >= 18) {\n        cout << \"You are old enough.\" << endl;\n        if (hasLicense) {\n            cout << \"You can drive.\" << endl;\n        } else {\n            cout << \"You need a license to drive.\" << endl;\n        }\n    } else {\n        cout << \"You are too young to drive.\" << endl;\n    }\n    \n    // Find largest of three numbers\n    int a = 10, b = 25, c = 15;\n    int largest;\n    if (a > b) {\n        if (a > c) largest = a;\n        else largest = c;\n    } else {\n        if (b > c) largest = b;\n        else largest = c;\n    }\n    cout << \"Largest of \" << a << \", \" << b << \", \" << c << \" is \" << largest << endl;\n    \n    return 0;\n}",
+      "output": "You are old enough.\nYou can drive.\nLargest of 10, 25, 15 is 25"
+    },
+    {
+      "title": "switch Statement",
+      "definition": "Efficiently handles multiple fixed integer or character values. Each case must end with break to avoid fall-through.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    char grade = 'B';\n    \n    switch (grade) {\n        case 'A':\n            cout << \"Excellent!\" << endl;\n            break;\n        case 'B':\n            cout << \"Good job!\" << endl;\n            break;\n        case 'C':\n            cout << \"Fair\" << endl;\n            break;\n        case 'D':\n            cout << \"Needs improvement\" << endl;\n            break;\n        default:\n            cout << \"Invalid grade\" << endl;\n    }\n    \n    // Fall-through example (intentionally)\n    int day = 3;\n    switch (day) {\n        case 1:\n        case 2:\n        case 3:\n        case 4:\n        case 5:\n            cout << \"Weekday\" << endl;\n            break;\n        case 6:\n        case 7:\n            cout << \"Weekend\" << endl;\n            break;\n        default:\n            cout << \"Invalid day\" << endl;\n    }\n    \n    return 0;\n}",
+      "output": "Good job!\nWeekday"
+    },
+    {
+      "title": "for Loop",
+      "definition": "Repeats a block a known number of times. Syntax: for(init; condition; increment) { ... }",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Basic counting up\n    cout << \"Counting up: \";\n    for (int i = 1; i <= 5; i++) {\n        cout << i << \" \";\n    }\n    cout << endl;\n    \n    // Counting down\n    cout << \"Counting down: \";\n    for (int i = 10; i >= 1; i--) {\n        cout << i << \" \";\n    }\n    cout << endl;\n    \n    // Step by 2 (even numbers)\n    cout << \"Even numbers: \";\n    for (int i = 2; i <= 10; i += 2) {\n        cout << i << \" \";\n    }\n    cout << endl;\n    \n    // Sum of first 10 numbers\n    int sum = 0;\n    for (int i = 1; i <= 10; i++) {\n        sum += i;\n    }\n    cout << \"Sum 1 to 10 = \" << sum << endl;\n    \n    // Multiple variables\n    for (int i = 0, j = 10; i < j; i++, j--) {\n        cout << \"i=\" << i << \", j=\" << j << endl;\n    }\n    \n    return 0;\n}",
+      "output": "Counting up: 1 2 3 4 5 \nCounting down: 10 9 8 7 6 5 4 3 2 1 \nEven numbers: 2 4 6 8 10 \nSum 1 to 10 = 55\ni=0, j=10\ni=1, j=9\ni=2, j=8\ni=3, j=7\ni=4, j=6"
+    },
+    {
+      "title": "Range-based for Loop (C++11)",
+      "definition": "Simplified iteration over arrays, vectors, strings, etc. No index variable needed.",
+      "code": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    // Array\n    int numbers[] = {10, 20, 30, 40, 50};\n    cout << \"Array: \";\n    for (int n : numbers) {\n        cout << n << \" \";\n    }\n    cout << endl;\n    \n    // Vector\n    vector<double> prices = {1.99, 2.49, 3.79};\n    cout << \"Prices: \";\n    for (double p : prices) {\n        cout << p << \" \";\n    }\n    cout << endl;\n    \n    // String\n    string word = \"Hello\";\n    cout << \"Characters: \";\n    for (char c : word) {\n        cout << c << \" \";\n    }\n    cout << endl;\n    \n    // Modify elements (use reference &)\n    for (int& n : numbers) {\n        n *= 2;\n    }\n    cout << \"Doubled array: \";\n    for (int n : numbers) {\n        cout << n << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+      "output": "Array: 10 20 30 40 50 \nPrices: 1.99 2.49 3.79 \nCharacters: H e l l o \nDoubled array: 20 40 60 80 100"
+    },
+    {
+      "title": "while Loop",
+      "definition": "Repeats as long as a condition is true. Condition checked before each iteration.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Print 1 to 5\n    int i = 1;\n    while (i <= 5) {\n        cout << i << \" \";\n        i++;\n    }\n    cout << endl;\n    \n    // Sum digits of a number\n    int num = 12345;\n    int sum = 0;\n    while (num > 0) {\n        sum += num % 10;\n        num /= 10;\n    }\n    cout << \"Sum of digits = \" << sum << endl;\n    \n    // Keep reading until valid input\n    int input;\n    cout << \"Enter a positive number: \";\n    cin >> input;\n    while (input <= 0) {\n        cout << \"Invalid. Try again: \";\n        cin >> input;\n    }\n    cout << \"You entered \" << input << endl;\n    \n    return 0;\n}",
+      "output": "1 2 3 4 5 \nSum of digits = 15"
+    },
+    {
+      "title": "do-while Loop",
+      "definition": "Executes block once, then repeats while condition is true. Guarantees at least one execution.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Runs at least once even if condition false\n    int x = 10;\n    do {\n        cout << \"This runs once: x = \" << x << endl;\n    } while (x < 5);\n    \n    // Menu system\n    int choice;\n    do {\n        cout << \"\\n--- MENU ---\" << endl;\n        cout << \"1. Say Hello\" << endl;\n        cout << \"2. Say Goodbye\" << endl;\n        cout << \"3. Exit\" << endl;\n        cout << \"Choice: \";\n        cin >> choice;\n        \n        switch (choice) {\n            case 1:\n                cout << \"Hello!\" << endl;\n                break;\n            case 2:\n                cout << \"Goodbye!\" << endl;\n                break;\n            case 3:\n                cout << \"Exiting...\" << endl;\n                break;\n            default:\n                cout << \"Invalid choice\" << endl;\n        }\n    } while (choice != 3);\n    \n    return 0;\n}"
+    },
+    {
+      "title": "break Statement",
+      "definition": "Exits the nearest loop or switch immediately.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Stop loop when i equals 5\n    for (int i = 1; i <= 10; i++) {\n        if (i == 5) {\n            cout << \"Breaking at \" << i << endl;\n            break;\n        }\n        cout << i << \" \";\n    }\n    cout << endl;\n    \n    // Find first even number in array\n    int arr[] = {3, 7, 9, 12, 15};\n    int found = -1;\n    for (int i = 0; i < 5; i++) {\n        if (arr[i] % 2 == 0) {\n            found = arr[i];\n            break;\n        }\n    }\n    cout << \"First even number: \" << found << endl;\n    \n    return 0;\n}",
+      "output": "1 2 3 4 Breaking at 5\nFirst even number: 12"
+    },
+    {
+      "title": "continue Statement",
+      "definition": "Skips the rest of the current iteration and jumps to the next loop iteration.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Print only odd numbers\n    cout << \"Odd numbers: \";\n    for (int i = 1; i <= 10; i++) {\n        if (i % 2 == 0) continue;\n        cout << i << \" \";\n    }\n    cout << endl;\n    \n    // Skip vowels\n    string text = \"Hello World\";\n    string vowels = \"aeiouAEIOU\";\n    cout << \"Consonants only: \";\n    for (char c : text) {\n        bool isVowel = false;\n        for (char v : vowels) {\n            if (c == v) {\n                isVowel = true;\n                break;\n            }\n        }\n        if (isVowel) continue;\n        cout << c;\n    }\n    cout << endl;\n    \n    return 0;\n}",
+      "output": "Odd numbers: 1 3 5 7 9 \nConsonants only: Hll Wrld"
+    },
+    {
+      "title": "goto Statement (Use with Caution)",
+      "definition": "Jumps to a labeled statement. Can make code hard to read; use sparingly.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int num = 1;\n    \n    start:\n    cout << num << \" \";\n    num++;\n    if (num <= 5) goto start;\n    cout << endl;\n    \n    // Nested loops break out easily with goto\n    for (int i = 0; i < 5; i++) {\n        for (int j = 0; j < 5; j++) {\n            if (i == 2 && j == 3) {\n                goto exit_loops;\n            }\n            cout << \"(\" << i << \",\" << j << \") \";\n        }\n        cout << endl;\n    }\n    exit_loops:\n    cout << \"\\nExited loops at i=2, j=3\" << endl;\n    \n    return 0;\n}",
+      "output": "1 2 3 4 5 \n(0,0) (0,1) (0,2) (0,3) (0,4) \n(1,0) (1,1) (1,2) (1,3) (1,4) \n(2,0) (2,1) (2,2) \nExited loops at i=2, j=3"
+    },
+    {
+      "title": "Nested Loops",
+      "definition": "Loops inside loops. Useful for working with 2D data, patterns, etc.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Multiplication table (10x10)\n    cout << \"Multiplication Table:\\n\";\n    for (int i = 1; i <= 10; i++) {\n        for (int j = 1; j <= 10; j++) {\n            cout << i * j << \"\\t\";\n        }\n        cout << endl;\n    }\n    \n    // Triangle pattern\n    int rows = 5;\n    cout << \"\\nTriangle pattern:\\n\";\n    for (int i = 1; i <= rows; i++) {\n        for (int j = 1; j <= i; j++) {\n            cout << \"* \";\n        }\n        cout << endl;\n    }\n    \n    // Prime numbers up to 50\n    cout << \"\\nPrime numbers up to 50: \";\n    for (int n = 2; n <= 50; n++) {\n        bool isPrime = true;\n        for (int d = 2; d * d <= n; d++) {\n            if (n % d == 0) {\n                isPrime = false;\n                break;\n            }\n        }\n        if (isPrime) cout << n << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "topic": "C++ Basic Syntax",
+  "description": "Comprehensive guide to C++ syntax fundamentals: program structure, output/input, comments, and basic statements. Every concept includes definition and working code.",
+  "sections": [
+    {
+      "title": "Program Structure",
+      "definition": "A C++ program consists of header includes, a main() function (entry point), and optional namespaces. Execution starts at main().",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello from C++!\" << endl;\n    return 0;\n}",
+      "output": "Hello from C++!"
+    },
+    {
+      "title": "Output with cout",
+      "definition": "cout sends data to the console. Use << to chain items. endl adds a newline and flushes output; \\n is just a newline.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello \" << \"World!\" << endl;\n    cout << \"Number: \" << 42 << \"\\n\";\n    cout << \"Pi: \" << 3.14159 << endl;\n    cout << \"Sum: \" << 10 + 20 << endl;\n    return 0;\n}",
+      "output": "Hello World!\nNumber: 42\nPi: 3.14159\nSum: 30"
+    },
+    {
+      "title": "Input with cin",
+      "definition": "cin reads input from the user. Use >> to store values. Multiple inputs can be chained.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int age;\n    string name;\n    \n    cout << \"Enter your name: \";\n    cin >> name;\n    cout << \"Enter your age: \";\n    cin >> age;\n    \n    cout << \"Hello \" << name << \", you are \" << age << \" years old.\" << endl;\n    \n    // Chaining input\n    int a, b;\n    cout << \"Enter two numbers: \";\n    cin >> a >> b;\n    cout << \"Sum = \" << a + b << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Comments",
+      "definition": "Comments are ignored by the compiler. Use // for single-line and /* */ for multi-line comments.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // This is a single-line comment\n    cout << \"Hello\" << endl;\n    \n    /* This is a\n       multi-line comment */\n    cout << \"World\" << endl;\n    \n    return 0;\n}",
+      "output": "Hello\nWorld"
+    },
+    {
+      "title": "Statements and Blocks",
+      "definition": "A statement is an instruction ending with a semicolon. A block is a group of statements inside curly braces {}.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Simple statements\n    int x = 5;\n    x = x + 2;\n    cout << x << endl;\n    \n    // Block - can be used anywhere a single statement is expected\n    if (true) {\n        cout << \"Inside block\" << endl;\n        int y = 10;\n        cout << y << endl;\n    }\n    \n    return 0;\n}",
+      "output": "7\nInside block\n10"
+    },
+    {
+      "title": "Basic Variable Declaration and Initialization",
+      "definition": "Variables must be declared with a type before use. C++11 introduced uniform initialization using {}.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Traditional initialization\n    int age = 25;\n    double price = 9.99;\n    \n    // Uniform initialization (C++11)\n    int score{100};\n    char grade{'A'};\n    \n    cout << \"Age: \" << age << endl;\n    cout << \"Price: \" << price << endl;\n    cout << \"Score: \" << score << endl;\n    cout << \"Grade: \" << grade << endl;\n    \n    return 0;\n}",
+      "output": "Age: 25\nPrice: 9.99\nScore: 100\nGrade: A"
+    },
+    {
+      "title": "Arithmetic Operators",
+      "definition": "Operators: + - * / % (modulus). Integer division truncates. Use parentheses for grouping.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 10, b = 3;\n    cout << \"a + b = \" << a + b << endl;\n    cout << \"a - b = \" << a - b << endl;\n    cout << \"a * b = \" << a * b << endl;\n    cout << \"a / b = \" << a / b << \" (integer division)\" << endl;\n    cout << \"a % b = \" << a % b << \" (remainder)\" << endl;\n    \n    double x = 10.0, y = 3.0;\n    cout << \"x / y = \" << x / y << endl;\n    \n    return 0;\n}",
+      "output": "a + b = 13\na - b = 7\na * b = 30\na / b = 3 (integer division)\na % b = 1\nx / y = 3.33333"
+    },
+    {
+      "title": "Increment and Decrement Operators",
+      "definition": "++ increments by 1, -- decrements by 1. Prefix (++x) changes then uses; postfix (x++) uses then changes.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 5;\n    cout << \"x = \" << x << endl;\n    cout << \"++x = \" << ++x << endl;  // x becomes 6, then prints 6\n    cout << \"x++ = \" << x++ << endl;  // prints 6, then x becomes 7\n    cout << \"Now x = \" << x << endl;\n    \n    int y = 5;\n    cout << \"y-- = \" << y-- << endl;  // prints 5, then y becomes 4\n    cout << \"--y = \" << --y << endl;  // y becomes 3, then prints 3\n    \n    return 0;\n}",
+      "output": "x = 5\n++x = 6\nx++ = 6\nNow x = 7\ny-- = 5\n--y = 3"
+    }
+  ]
+}

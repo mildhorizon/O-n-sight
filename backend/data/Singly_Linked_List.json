@@ -1,0 +1,72 @@
+{
+  "topic": "Singly Linked List",
+  "description": "Complete guide to singly linked lists: node structure, insertion (beginning, end, position), deletion, traversal, search, reversal, and complexity analysis. Many examples for beginners.",
+  "sections": [
+    {
+      "title": "What is a Singly Linked List?",
+      "definition": "A singly linked list is a linear data structure where each element (node) contains data and a pointer to the next node. It allows dynamic memory allocation and efficient insertions/deletions compared to arrays.",
+      "analogy": "Like a treasure hunt where each clue tells you where the next clue is. You can only go forward, not backward.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int val) : data(val), next(nullptr) {}\n};\n\nint main() {\n    Node* head = new Node(10);\n    head->next = new Node(20);\n    head->next->next = new Node(30);\n    // Traversal\n    Node* current = head;\n    while (current) {\n        cout << current->data << \" -> \";\n        current = current->next;\n    }\n    cout << \"nullptr\" << endl;\n    return 0;\n}"
+    },
+    {
+      "title": "Node Structure",
+      "definition": "Each node contains data (any type) and a pointer to the next node. The last node points to nullptr.",
+      "code": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nstruct Node {\n    T data;\n    Node<T>* next;\n    Node(const T& val) : data(val), next(nullptr) {}\n};\n\nint main() {\n    Node<int>* intNode = new Node<int>(42);\n    Node<string>* strNode = new Node<string>(\"Hello\");\n    cout << intNode->data << endl;\n    cout << strNode->data << endl;\n    delete intNode;\n    delete strNode;\n    return 0;\n}"
+    },
+    {
+      "title": "Creating and Traversing a List",
+      "definition": "Start with head pointer (nullptr for empty list). Traverse by following next pointers until nullptr.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nvoid traverse(Node* head) {\n    Node* curr = head;\n    while (curr) {\n        cout << curr->data << \" -> \";\n        curr = curr->next;\n    }\n    cout << \"nullptr\" << endl;\n}\n\nint main() {\n    Node* head = nullptr;  // empty list\n    head = new Node(10);\n    head->next = new Node(20);\n    head->next->next = new Node(30);\n    traverse(head);\n    return 0;\n}"
+    },
+    {
+      "title": "Insertion at Beginning",
+      "definition": "Create new node, set its next to current head, then update head to point to new node. O(1) time.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nvoid insertAtBeginning(Node*& head, int val) {\n    Node* newNode = new Node(val);\n    newNode->next = head;\n    head = newNode;\n}\n\nvoid print(Node* head) {\n    while (head) {\n        cout << head->data << \" \";\n        head = head->next;\n    }\n    cout << endl;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertAtBeginning(head, 30);\n    insertAtBeginning(head, 20);\n    insertAtBeginning(head, 10);\n    print(head);  // 10 20 30\n    return 0;\n}"
+    },
+    {
+      "title": "Insertion at End",
+      "definition": "Traverse to last node, set its next to new node. If list empty, make head point to new node. O(n) time.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nvoid insertAtEnd(Node*& head, int val) {\n    Node* newNode = new Node(val);\n    if (!head) {\n        head = newNode;\n        return;\n    }\n    Node* curr = head;\n    while (curr->next) curr = curr->next;\n    curr->next = newNode;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertAtEnd(head, 10);\n    insertAtEnd(head, 20);\n    insertAtEnd(head, 30);\n    // Output: 10 20 30\n    return 0;\n}"
+    },
+    {
+      "title": "Insertion at a Given Position (0-indexed)",
+      "definition": "Insert before position i. Handle beginning (i==0) and middle/end. O(n) time.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nvoid insertAtPosition(Node*& head, int val, int pos) {\n    if (pos < 0) return;\n    Node* newNode = new Node(val);\n    if (pos == 0) {\n        newNode->next = head;\n        head = newNode;\n        return;\n    }\n    Node* curr = head;\n    for (int i = 0; i < pos - 1 && curr; i++) {\n        curr = curr->next;\n    }\n    if (!curr) { delete newNode; return; } // position out of range\n    newNode->next = curr->next;\n    curr->next = newNode;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertAtEnd(head, 10); insertAtEnd(head, 30);\n    insertAtPosition(head, 20, 1); // 10 20 30\n    return 0;\n}"
+    },
+    {
+      "title": "Deletion by Value",
+      "definition": "Find node with given value, adjust previous node's next pointer to skip it. Delete node. O(n).",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nvoid deleteByValue(Node*& head, int val) {\n    if (!head) return;\n    if (head->data == val) {\n        Node* temp = head;\n        head = head->next;\n        delete temp;\n        return;\n    }\n    Node* curr = head;\n    while (curr->next && curr->next->data != val) {\n        curr = curr->next;\n    }\n    if (curr->next) {\n        Node* temp = curr->next;\n        curr->next = temp->next;\n        delete temp;\n    }\n}\n\nint main() {\n    Node* head = nullptr;\n    insertAtEnd(head, 10); insertAtEnd(head, 20); insertAtEnd(head, 30);\n    deleteByValue(head, 20);\n    // List: 10 30\n    return 0;\n}"
+    },
+    {
+      "title": "Deletion at Position",
+      "definition": "Remove node at given index. O(n).",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nvoid deleteAtPosition(Node*& head, int pos) {\n    if (!head || pos < 0) return;\n    if (pos == 0) {\n        Node* temp = head;\n        head = head->next;\n        delete temp;\n        return;\n    }\n    Node* curr = head;\n    for (int i = 0; i < pos - 1 && curr; i++) curr = curr->next;\n    if (!curr || !curr->next) return;\n    Node* temp = curr->next;\n    curr->next = temp->next;\n    delete temp;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertAtEnd(head, 10); insertAtEnd(head, 20); insertAtEnd(head, 30);\n    deleteAtPosition(head, 1); // removes 20\n    return 0;\n}"
+    },
+    {
+      "title": "Searching for an Element",
+      "definition": "Traverse and compare data. Return true if found. O(n).",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nbool search(Node* head, int key) {\n    Node* curr = head;\n    while (curr) {\n        if (curr->data == key) return true;\n        curr = curr->next;\n    }\n    return false;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertAtEnd(head, 5); insertAtEnd(head, 10); insertAtEnd(head, 15);\n    cout << search(head, 10) << endl; // 1\n    cout << search(head, 99) << endl; // 0\n    return 0;\n}"
+    },
+    {
+      "title": "Reversing a Singly Linked List",
+      "definition": "Iterative method: use three pointers (prev, curr, next) to reverse links. O(n) time, O(1) space.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nNode* reverse(Node* head) {\n    Node* prev = nullptr;\n    Node* curr = head;\n    Node* next = nullptr;\n    while (curr) {\n        next = curr->next;\n        curr->next = prev;\n        prev = curr;\n        curr = next;\n    }\n    return prev;\n}\n\nvoid print(Node* head) {\n    while (head) { cout << head->data << \" \"; head = head->next; }\n    cout << endl;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertAtEnd(head, 1); insertAtEnd(head, 2); insertAtEnd(head, 3);\n    print(head);        // 1 2 3\n    head = reverse(head);\n    print(head);        // 3 2 1\n    return 0;\n}"
+    },
+    {
+      "title": "Finding Middle of Linked List (Slow-Fast Pointer)",
+      "definition": "Use two pointers: slow moves one step, fast moves two steps. When fast reaches end, slow is at middle. O(n).",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nNode* findMiddle(Node* head) {\n    if (!head) return nullptr;\n    Node* slow = head;\n    Node* fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n    }\n    return slow;\n}\n\nint main() {\n    Node* head = nullptr;\n    for (int i = 1; i <= 5; i++) insertAtEnd(head, i);\n    Node* mid = findMiddle(head);\n    cout << \"Middle data: \" << mid->data << endl; // 3\n    return 0;\n}"
+    },
+    {
+      "title": "Detecting Cycle (Floyd's Cycle Detection)",
+      "definition": "Use slow and fast pointers. If they meet, cycle exists. O(n) time.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nbool hasCycle(Node* head) {\n    Node* slow = head;\n    Node* fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n        if (slow == fast) return true;\n    }\n    return false;\n}\n\nint main() {\n    Node* head = new Node(1);\n    head->next = new Node(2);\n    head->next->next = new Node(3);\n    head->next->next->next = head->next; // create cycle\n    cout << hasCycle(head) << endl; // 1\n    return 0;\n}"
+    },
+    {
+      "title": "Memory Management and Destructor",
+      "definition": "Always delete nodes to avoid memory leaks. A destructor can traverse and delete all nodes.",
+      "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    Node(int d) : data(d), next(nullptr) {}\n};\n\nclass LinkedList {\n    Node* head;\npublic:\n    LinkedList() : head(nullptr) {}\n    ~LinkedList() {\n        Node* curr = head;\n        while (curr) {\n            Node* temp = curr;\n            curr = curr->next;\n            delete temp;\n        }\n    }\n    void insert(int val) { /* ... */ }\n};\n\nint main() {\n    LinkedList list;\n    // list goes out of scope, all nodes deleted\n    return 0;\n}"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "topic": "Graph Algorithms",
+  "description": "Core graph algorithms including shortest path, MST, and topological sort.",
+  "sections": [
+    {
+      "title": "Dijkstra Algorithm",
+      "definition": "Find shortest path from source in weighted graph.",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nvoid dijkstra(int V, vector<pair<int,int>> adj[], int src) {\n    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq;\n    vector<int> dist(V, INT_MAX);\n    dist[src] = 0;\n    pq.push({0, src});\n\n    while(!pq.empty()) {\n        auto [d,u] = pq.top(); pq.pop();\n        for(auto [v,w]: adj[u]) {\n            if(dist[v] > d + w) {\n                dist[v] = d + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n}"
+    },
+    {
+      "title": "Bellman-Ford",
+      "definition": "Handles negative weights.",
+      "code": "#include <vector>\nusing namespace std;\n\nvoid bellmanFord(int V, vector<vector<int>>& edges, int src) {\n    vector<int> dist(V, 1e9);\n    dist[src] = 0;\n\n    for(int i=0;i<V-1;i++) {\n        for(auto e: edges) {\n            int u=e[0], v=e[1], w=e[2];\n            if(dist[u]+w < dist[v])\n                dist[v] = dist[u]+w;\n        }\n    }\n}"
+    },
+    {
+      "title": "Kruskal MST",
+      "definition": "Minimum spanning tree using sorting + DSU.",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge { int u,v,w; };\n\nbool cmp(Edge a, Edge b) { return a.w < b.w; }\n\nint parent[100];\n\nint find(int x) {\n    if(parent[x]==x) return x;\n    return parent[x] = find(parent[x]);\n}\n\nvoid unite(int a,int b) { parent[find(a)] = find(b); }\n\nvoid kruskal(vector<Edge>& edges, int V) {\n    for(int i=0;i<V;i++) parent[i]=i;\n    sort(edges.begin(), edges.end(), cmp);\n    for(auto e: edges) {\n        if(find(e.u)!=find(e.v)) {\n            unite(e.u,e.v);\n            cout << e.u << \"-\" << e.v << endl;\n        }\n    }\n}"
+    },
+    {
+      "title": "Topological Sort (Kahn’s)",
+      "definition": "BFS-based ordering for DAG.",
+      "code": "#include <queue>\n#include <vector>\nusing namespace std;\n\nvoid topoSort(int V, vector<int> adj[]) {\n    vector<int> indeg(V,0);\n    for(int i=0;i<V;i++)\n        for(int v: adj[i]) indeg[v]++;\n\n    queue<int> q;\n    for(int i=0;i<V;i++)\n        if(indeg[i]==0) q.push(i);\n\n    while(!q.empty()) {\n        int u=q.front(); q.pop();\n        cout<<u<<\" \";\n        for(int v: adj[u])\n            if(--indeg[v]==0) q.push(v);\n    }\n}"
+    },
+    {
+      "title": "Cycle Detection (DFS)",
+      "definition": "Detect cycle in directed graph.",
+      "code": "#include <vector>\nusing namespace std;\n\nbool dfsCycle(int node, vector<int> adj[], vector<bool>& vis, vector<bool>& rec) {\n    vis[node]=rec[node]=true;\n    for(int v: adj[node]) {\n        if(!vis[v] && dfsCycle(v,adj,vis,rec)) return true;\n        else if(rec[v]) return true;\n    }\n    rec[node]=false;\n    return false;\n}"
+    }
+  ]
+}

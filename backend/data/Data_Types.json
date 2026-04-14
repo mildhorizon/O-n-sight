@@ -1,0 +1,52 @@
+{
+  "topic": "C++ Data Types",
+  "description": "Complete guide to C++ data types: fundamental types, modifiers, strings, bool, type casting, sizeof, and constants. Includes many examples.",
+  "sections": [
+    {
+      "title": "Fundamental Data Types",
+      "definition": "C++ provides several built-in data types to store different kinds of values.",
+      "table": [
+        { "type": "int", "description": "Whole numbers", "size": "4 bytes", "range": "-2³¹ to 2³¹-1", "example": "int x = 42;" },
+        { "type": "float", "description": "Single-precision decimal", "size": "4 bytes", "range": "±3.4e±38", "example": "float pi = 3.14f;" },
+        { "type": "double", "description": "Double-precision decimal", "size": "8 bytes", "range": "±1.7e±308", "example": "double e = 2.71828;" },
+        { "type": "char", "description": "Single character", "size": "1 byte", "range": "-128 to 127 (ASCII)", "example": "char ch = 'A';" },
+        { "type": "bool", "description": "Boolean (true/false)", "size": "1 byte", "range": "true / false", "example": "bool flag = true;" },
+        { "type": "void", "description": "No value (functions)", "size": "0", "range": "-", "example": "void func();" }
+      ],
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 100;\n    float b = 3.14159f;\n    double c = 2.718281828459;\n    char d = 'X';\n    bool e = true;\n    \n    cout << \"int: \" << a << endl;\n    cout << \"float: \" << b << endl;\n    cout << \"double: \" << c << endl;\n    cout << \"char: \" << d << endl;\n    cout << \"bool (true=1): \" << e << endl;\n    return 0;\n}",
+      "output": "int: 100\nfloat: 3.14159\ndouble: 2.71828\nchar: X\nbool (true=1): 1"
+    },
+    {
+      "title": "Type Modifiers",
+      "definition": "Modifiers change the size or sign of basic types: signed, unsigned, short, long.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    unsigned int positiveOnly = 4000000000U; // can't be negative\n    long int bigNumber = 1000000000L;\n    short int smallNumber = 32767;\n    unsigned char byte = 255;\n    \n    cout << \"unsigned int: \" << positiveOnly << endl;\n    cout << \"long int: \" << bigNumber << endl;\n    cout << \"short int: \" << smallNumber << endl;\n    cout << \"unsigned char: \" << (int)byte << endl;  // cast to int to see numeric\n    \n    // long long (C++11)\n    long long veryBig = 9223372036854775807LL;\n    cout << \"long long: \" << veryBig << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "The string Type",
+      "definition": "std::string (from <string>) stores sequences of characters. It's more convenient than C-style char arrays.",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string greeting = \"Hello\";\n    string name = \"Alice\";\n    \n    // Concatenation\n    string message = greeting + \", \" + name + \"!\";\n    cout << message << endl;\n    \n    // Length\n    cout << \"Length of message: \" << message.length() << endl;\n    \n    // Access characters\n    cout << \"First character: \" << message[0] << endl;\n    \n    // Input with spaces (use getline)\n    string fullName;\n    cout << \"Enter your full name: \";\n    getline(cin, fullName);\n    cout << \"Hello, \" << fullName << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "sizeof Operator",
+      "definition": "sizeof returns the size in bytes of a type or variable. Useful for understanding memory usage.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Size of char: \" << sizeof(char) << \" byte(s)\" << endl;\n    cout << \"Size of int: \" << sizeof(int) << \" bytes\" << endl;\n    cout << \"Size of float: \" << sizeof(float) << \" bytes\" << endl;\n    cout << \"Size of double: \" << sizeof(double) << \" bytes\" << endl;\n    cout << \"Size of bool: \" << sizeof(bool) << \" byte(s)\" << endl;\n    \n    int arr[10];\n    cout << \"Size of array of 10 ints: \" << sizeof(arr) << \" bytes\" << endl;\n    cout << \"Number of elements: \" << sizeof(arr) / sizeof(arr[0]) << endl;\n    \n    return 0;\n}",
+      "output": "Size of char: 1 byte(s)\nSize of int: 4 bytes\nSize of float: 4 bytes\nSize of double: 8 bytes\nSize of bool: 1 byte(s)\nSize of array of 10 ints: 40 bytes\nNumber of elements: 10"
+    },
+    {
+      "title": "Constants and Literals",
+      "definition": "Constants are fixed values. Use const keyword or #define preprocessor. Literals are explicit values like 42, 3.14, 'A'.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    const double PI = 3.1415926535;\n    const int DAYS_IN_WEEK = 7;\n    // PI = 3.14; // ERROR: cannot modify constant\n    \n    cout << \"PI = \" << PI << endl;\n    cout << \"Days in week = \" << DAYS_IN_WEEK << endl;\n    \n    // Literal examples\n    int decimal = 42;      // decimal literal\n    int octal = 052;       // octal (starts with 0) = 42 decimal\n    int hex = 0x2A;        // hexadecimal (starts with 0x) = 42\n    unsigned int u = 42U;  // unsigned literal\n    long l = 42L;          // long literal\n    float f = 3.14f;       // float literal\n    double d = 3.14;       // double literal\n    char c = 'A';          // character literal\n    string s = \"Hello\";    // string literal\n    \n    cout << \"Decimal: \" << decimal << \", Octal: \" << octal << \", Hex: \" << hex << endl;\n    \n    return 0;\n}"
+    },
+    {
+      "title": "Type Casting (Conversion)",
+      "definition": "Convert one data type to another using static_cast, or C-style casts. Implicit conversion happens automatically.",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Implicit conversion\n    int a = 3.14;   // double to int -> truncates to 3\n    double b = 5;   // int to double -> 5.0\n    \n    cout << \"Implicit: int from double = \" << a << endl;\n    cout << \"Implicit: double from int = \" << b << endl;\n    \n    // C-style cast\n    double pi = 3.14159;\n    int piInt = (int)pi;\n    cout << \"C-style cast: \" << piInt << endl;\n    \n    // static_cast (preferred in C++)\n    double price = 9.99;\n    int dollars = static_cast<int>(price);\n    cout << \"static_cast: \" << dollars << endl;\n    \n    // Converting between numeric and char\n    int ascii = 65;\n    char letter = static_cast<char>(ascii);\n    cout << \"ASCII 65 is char: \" << letter << endl;\n    \n    // Beware of overflow\n    int big = 1000000;\n    short small = static_cast<short>(big);  // may overflow\n    cout << \"Overflow example: \" << small << endl;\n    \n    return 0;\n}",
+      "output": "Implicit: int from double = 3\nImplicit: double from int = 5\nC-style cast: 3\nstatic_cast: 9\nASCII 65 is char: A\nOverflow example: 16960"
+    },
+    {
+      "title": "auto Keyword (Type Deduction)",
+      "definition": "auto lets the compiler deduce the type of a variable from its initializer (C++11).",
+      "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    auto x = 42;           // int\n    auto y = 3.14;         // double\n    auto z = 'A';          // char\n    auto s = string(\"Hello\"); // std::string\n    auto result = x + y;   // double (int + double)\n    \n    cout << \"x type: int, value = \" << x << endl;\n    cout << \"y type: double, value = \" << y << endl;\n    cout << \"z type: char, value = \" << z << endl;\n    cout << \"s type: string, value = \" << s << endl;\n    cout << \"result type: double, value = \" << result << endl;\n    \n    return 0;\n}"
+    }
+  ]
+}

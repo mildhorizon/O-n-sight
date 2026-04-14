@@ -1,0 +1,31 @@
+{
+  "topic": "Advanced Graphs",
+  "description": "Advanced graph algorithms like DSU, SCC, bridges, and Floyd-Warshall.",
+  "sections": [
+    {
+      "title": "Disjoint Set (Union-Find)",
+      "definition": "Efficient structure for connectivity queries.",
+      "code": "#include <vector>\nusing namespace std;\n\nclass DSU {\n    vector<int> parent, rank;\npublic:\n    DSU(int n) {\n        parent.resize(n);\n        rank.resize(n,0);\n        for(int i=0;i<n;i++) parent[i]=i;\n    }\n    int find(int x) {\n        if(parent[x]!=x)\n            parent[x]=find(parent[x]);\n        return parent[x];\n    }\n    void unite(int x,int y) {\n        int px=find(x), py=find(y);\n        if(px==py) return;\n        if(rank[px]<rank[py]) parent[px]=py;\n        else if(rank[py]<rank[px]) parent[py]=px;\n        else { parent[py]=px; rank[px]++; }\n    }\n};"
+    },
+    {
+      "title": "Floyd-Warshall",
+      "definition": "All-pairs shortest path.",
+      "code": "#include <iostream>\nusing namespace std;\n\nvoid floyd(int dist[][100], int V) {\n    for(int k=0;k<V;k++)\n        for(int i=0;i<V;i++)\n            for(int j=0;j<V;j++)\n                if(dist[i][k]+dist[k][j] < dist[i][j])\n                    dist[i][j] = dist[i][k]+dist[k][j];\n}"
+    },
+    {
+      "title": "Kosaraju (SCC)",
+      "definition": "Strongly connected components.",
+      "code": "#include <vector>\n#include <stack>\nusing namespace std;\n\nvoid dfs1(int v, vector<int> adj[], vector<bool>& vis, stack<int>& st) {\n    vis[v]=true;\n    for(int u: adj[v]) if(!vis[u]) dfs1(u,adj,vis,st);\n    st.push(v);\n}"
+    },
+    {
+      "title": "Bridge Detection",
+      "definition": "Find critical edges.",
+      "code": "#include <vector>\nusing namespace std;\n\nvoid dfsBridge(int u, int parent, vector<int> adj[], vector<int>& disc, vector<int>& low, int& time) {\n    disc[u]=low[u]=++time;\n    for(int v: adj[u]) {\n        if(v==parent) continue;\n        if(!disc[v]) {\n            dfsBridge(v,u,adj,disc,low,time);\n            low[u]=min(low[u],low[v]);\n            if(low[v]>disc[u]) cout<<u<<\"-\"<<v<<\" bridge\\n\";\n        } else low[u]=min(low[u],disc[v]);\n    }\n}"
+    },
+    {
+      "title": "Bipartite Graph Check",
+      "definition": "Check if graph can be colored using 2 colors.",
+      "code": "#include <queue>\n#include <vector>\nusing namespace std;\n\nbool isBipartite(int V, vector<int> adj[]) {\n    vector<int> color(V,-1);\n    for(int i=0;i<V;i++) {\n        if(color[i]==-1) {\n            queue<int> q;\n            q.push(i);\n            color[i]=0;\n            while(!q.empty()) {\n                int u=q.front(); q.pop();\n                for(int v: adj[u]) {\n                    if(color[v]==-1) {\n                        color[v]=!color[u];\n                        q.push(v);\n                    } else if(color[v]==color[u]) return false;\n                }\n            }\n        }\n    }\n    return true;\n}"
+    }
+  ]
+}
