@@ -1,4 +1,4 @@
-FROM "C:/Users/priya/.lmstudio/models/lmstudio-community/my-new-model/lumina.gguf"
+FROM "location-of-your-model"
 
 TEMPLATE """{{ if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
